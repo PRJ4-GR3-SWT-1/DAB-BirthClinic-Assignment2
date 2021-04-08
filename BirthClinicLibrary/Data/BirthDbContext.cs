@@ -20,7 +20,12 @@ namespace EFModels.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            CreateData(modelBuilder);
+        }
 
+        private void CreateData(ModelBuilder mb)
+        {
+            mb.Entity<Child>().HasData(new Child());
         }
 
         public DbSet<Room> Room { get; set; }
