@@ -20,6 +20,27 @@ namespace BirthClinicLibrary.Models
 
     public class Clinician:Person
     {
-        public ICollection<Room> AssociatedRooms { get; set; }
+        public ICollection<Birth> AssociatedBirths { get; set; }
     }
+    public class Secretary : Person
+    {
+        
+    }
+    public class Mother : Person
+    {
+        public Child Child { get; set; }
+        public RestingRoom RestingRoom { get; set; }
+        public MaternityRoom MaternityRoom { get; set; }
+        
+        public DateTime MaternityRoomReservationStart { get; set; }
+        public DateTime MaternityRoomReservationEnd { get; set; }
+        
+        public DateTime RestingRoomReservationStart { get; set; }
+        public DateTime RestingRoomReservationEnd { get; set; }
+    }
+    public class MidWife : Clinician { }
+    public class Doctor : Clinician { }
+    public class Nurse : Clinician { }
+    public class SocialHealthAssistant : Clinician { }
+
 }

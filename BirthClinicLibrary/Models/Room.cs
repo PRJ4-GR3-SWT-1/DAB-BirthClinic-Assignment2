@@ -19,4 +19,8 @@ namespace BirthClinicLibrary.Models
    {
         
    }
+   public class BirthRoom : Room
+   {
+
+   }
 }

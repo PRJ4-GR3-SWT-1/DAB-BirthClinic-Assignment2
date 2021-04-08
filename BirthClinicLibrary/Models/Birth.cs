@@ -13,12 +13,7 @@ namespace BirthClinicLibrary.Models
         public Room BirthRoom { get; set; }
             public DateTime BirthRoomReservationStart { get; set; }
             public DateTime BirthRoomReservationEnd { get; set; }
-        public Room MaternityRoom { get; set; }
-            public DateTime MaternityRoomReservationStart { get; set; }
-            public DateTime MaternityRoomReservationEnd { get; set; }
-        public Room RestingRoom { get; set; }
-            public DateTime RestingRoomReservationStart { get; set; }
-            public DateTime RestingRoomReservationEnd { get; set; }
+        
         public ICollection<Person>Clinicians { get; set; }
         public DateAndTime PlannedStartTime { get; set; }
     }

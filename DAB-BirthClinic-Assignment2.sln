@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirthClinicLibrary", "BirthClinicLibrary\BirthClinicLibrary.csproj", "{A38B1B8F-59D8-4096-A8F0-7EDA51DE42FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication", "ConsoleApplication\ConsoleApplication.csproj", "{57E9BCE9-CF99-4465-AEFB-55D44CC26EDC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A38B1B8F-59D8-4096-A8F0-7EDA51DE42FD} = {A38B1B8F-59D8-4096-A8F0-7EDA51DE42FD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
