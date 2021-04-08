@@ -4,14 +4,16 @@ using EFModels.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BirthClinicLibrary.Migrations
 {
     [DbContext(typeof(BirthDbContext))]
-    partial class BirthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210408091213_mother")]
+    partial class mother
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,6 +40,9 @@ namespace BirthClinicLibrary.Migrations
                     b.Property<int?>("BirthRoomRoomId1")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ChildPersonId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ClinicianPersonId")
                         .HasColumnType("int");
 
@@ -49,6 +54,8 @@ namespace BirthClinicLibrary.Migrations
                     b.HasIndex("BirthRoomRoomId");
 
                     b.HasIndex("BirthRoomRoomId1");
+
+                    b.HasIndex("ChildPersonId");
 
                     b.HasIndex("ClinicianPersonId");
 
@@ -196,11 +203,17 @@ namespace BirthClinicLibrary.Migrations
                         .WithMany("BirthReservations")
                         .HasForeignKey("BirthRoomRoomId1");
 
+                    b.HasOne("BirthClinicLibrary.Models.Person", "Child")
+                        .WithMany()
+                        .HasForeignKey("ChildPersonId");
+
                     b.HasOne("BirthClinicLibrary.Models.Clinician", null)
                         .WithMany("AssociatedBirths")
                         .HasForeignKey("ClinicianPersonId");
 
                     b.Navigation("BirthRoom");
+
+                    b.Navigation("Child");
                 });
 
             modelBuilder.Entity("BirthClinicLibrary.Models.Person", b =>

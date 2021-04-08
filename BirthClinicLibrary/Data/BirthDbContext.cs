@@ -28,6 +28,7 @@ namespace EFModels.Data
         public DbSet<RestingRoom> RestingRoom { get; set; }
         public DbSet<BirthRoom> BirthRoom { get; set; }
         public DbSet<Person> Person { get; set; }
+        public DbSet<Child> Child { get; set; }
         public DbSet<Mother> Mother { get; set; }
         public DbSet<Doctor> Doctor { get; set; }
         public DbSet<Clinician> Clinicians { get; set; }

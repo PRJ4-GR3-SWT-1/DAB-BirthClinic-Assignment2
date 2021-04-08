@@ -12,7 +12,7 @@ namespace BirthClinicLibrary.Models
 
     public class Child : Person
     {
-        public Person Mother { get; set; }
+        public Mother Mother { get; set; }
         public DateTime ActualBirthTime { get; set; }
         public Birth Birth { get; set; }
 
@@ -32,7 +32,7 @@ namespace BirthClinicLibrary.Models
     }
     public class Mother : Person
     {
-        public Child Child { get; set; }
+        //public Child Child { get; set; }
         public RestingRoom RestingRoom { get; set; }
         public MaternityRoom MaternityRoom { get; set; }
         
