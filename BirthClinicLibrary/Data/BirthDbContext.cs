@@ -23,7 +23,15 @@ namespace EFModels.Data
 
         }
 
-        public DbSet<Room> Rooms { get; set; }
+        public DbSet<Room> Room { get; set; }
+        public DbSet<MaternityRoom> MaternityRoom { get; set; }
+        public DbSet<RestingRoom> RestingRoom { get; set; }
+        public DbSet<BirthRoom> BirthRoom { get; set; }
+        public DbSet<Person> Person { get; set; }
+        public DbSet<Mother> Mother { get; set; }
+        public DbSet<Doctor> Doctor { get; set; }
+        public DbSet<Clinician> Clinicians { get; set; }
+        public DbSet<Birth> Birth { get; set; }
 
 
     }

@@ -6,6 +6,10 @@ namespace BirthClinicLibrary.Models
 {
     public class Birth
     {
+        public Birth()
+        {
+            Clinicians = new List<Person>();
+        }
         public int BirthId { get; set; }
         public Person Child { get; set; }
 
@@ -15,6 +19,6 @@ namespace BirthClinicLibrary.Models
             public DateTime BirthRoomReservationEnd { get; set; }
         
         public ICollection<Person>Clinicians { get; set; }
-        public DateAndTime PlannedStartTime { get; set; }
+        public DateTime PlannedStartTime { get; set; }
     }
 }

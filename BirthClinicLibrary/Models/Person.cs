@@ -20,6 +20,10 @@ namespace BirthClinicLibrary.Models
 
     public class Clinician:Person
     {
+        public Clinician()
+        {
+            AssociatedBirths = new List<Birth>();
+        }
         public ICollection<Birth> AssociatedBirths { get; set; }
     }
     public class Secretary : Person
