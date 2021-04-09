@@ -25,19 +25,24 @@ namespace EFModels.Data
 
         private void CreateData(ModelBuilder mb)
         {
-            mb.Entity<Child>().HasData(new Child());
+           // mb.Entity<Child>().HasData(new Child());
         }
 
+        //Rooms:
         public DbSet<Room> Room { get; set; }
         public DbSet<MaternityRoom> MaternityRoom { get; set; }
         public DbSet<RestingRoom> RestingRoom { get; set; }
         public DbSet<BirthRoom> BirthRoom { get; set; }
+        //Persons:
         public DbSet<Person> Person { get; set; }
         public DbSet<Child> Child { get; set; }
         public DbSet<Mother> Mother { get; set; }
         public DbSet<Doctor> Doctor { get; set; }
         public DbSet<Clinician> Clinicians { get; set; }
+        //Birth:
         public DbSet<Birth> Birth { get; set; }
+        //Reservation:
+        public DbSet<Reservation> Reservation { get; set; }
 
 
     }
