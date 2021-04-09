@@ -25,7 +25,17 @@ namespace EFModels.Data
 
         private void CreateData(ModelBuilder mb)
         {
-            mb.Entity<Child>().HasData(new Child());
+            // Births
+            /*mb.Entity<Birth>().HasData(new Birth()
+            {
+              //  BirthRoom = null,
+              //  BirthRoomReservationStart = new DateTime(2021, 5, 12, 11, 0, 0),
+             //   BirthRoomReservationEnd = new DateTime(2021, 5, 12, 16, 0, 0),
+
+            });*/
+
+            // Children
+           // mb.Entity<Child>().HasData(new Child() {ActualBirthTime = new DateTime()});
         }
 
         public DbSet<Room> Room { get; set; }

@@ -13,6 +13,7 @@ namespace BirthClinicLibrary.Models
     public class Child : Person
     {
         public Mother Mother { get; set; }
+        public Person Father { get; set; }
         public DateTime ActualBirthTime { get; set; }
         public Birth Birth { get; set; }
 
