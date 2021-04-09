@@ -34,14 +34,7 @@ namespace BirthClinicLibrary.Models
     public class Mother : Person
     {
         //public Child Child { get; set; }
-        public RestingRoom RestingRoom { get; set; }
-        public MaternityRoom MaternityRoom { get; set; }
-        
-        public DateTime MaternityRoomReservationStart { get; set; }
-        public DateTime MaternityRoomReservationEnd { get; set; }
-        
-        public DateTime RestingRoomReservationStart { get; set; }
-        public DateTime RestingRoomReservationEnd { get; set; }
+        public ICollection<Reservation> Reservations { get; set; }
     }
     public class MidWife : Clinician { }
     public class Doctor : Clinician { }

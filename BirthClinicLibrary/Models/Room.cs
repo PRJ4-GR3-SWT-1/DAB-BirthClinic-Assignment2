@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace BirthClinicLibrary.Models
@@ -8,21 +7,21 @@ namespace BirthClinicLibrary.Models
     {
         public int RoomId { get; set; }
         public string RoomName { get; set; }
-        
+        public ICollection<Reservation> Reservations { get; set; }
+
     }
 
    public class MaternityRoom : Room
    {
-       public ICollection<Mother> MotherReservations { get; set; }
+       
     }
    public class RestingRoom : Room
    {
-       public ICollection<Mother> MotherReservations { get; set; }
+       
 
     }
    public class BirthRoom : Room
    {
-       public ICollection<Birth> BirthReservations { get; set; }
 
    }
 }
