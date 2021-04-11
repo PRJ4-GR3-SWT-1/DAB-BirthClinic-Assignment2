@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BirthClinicLibrary.Models
 {
-    public class Person
+    public abstract class Person
     { 
         public int PersonId { get; set; }
         public string FullName { get; set; }
@@ -19,7 +19,7 @@ namespace BirthClinicLibrary.Models
 
     }
 
-    public class Clinician:Person
+    public virtual class Clinician:Person
     {
         public Clinician()
         {
@@ -38,6 +38,6 @@ namespace BirthClinicLibrary.Models
     }
     public class MidWife : Clinician { }
     public class Doctor : Clinician { }
-    public class Nurse : Clinician { }
+    public override class Nurse  : Clinician { }
     public class SocialHealthAssistant : Clinician { }
 }

@@ -35,10 +35,28 @@ namespace ConsoleApplication
                 ShowPlannedBirths(context);
 
                 ShowAvailableRoomsAndClinicians(context);
+
+                ShowOngoingBirths(context);
             }
 
             
 
+        }
+
+        //Show the at current time ongoing births with information about the birth, parents, clinicians associated and the birth room.
+        private static void ShowOngoingBirths(BirthDbContext context)
+        {
+            List<Reservation> reservations =
+                context.Reservation
+                    .Where(reservation => reservation.ReservedRoom is BirthRoom)
+                    .Where(r=>r.ReservationStart<DateTime.Now
+                    && r.ReservationEnd>DateTime.Now)
+                    .Include(r => r.ReservedRoom)
+                    .Include(r=>r.User)
+                    .ToList();
+
+            List<Birth> births;
+           
         }
 
         private static void ShowAvailableRoomsAndClinicians(BirthDbContext context)
@@ -65,17 +83,36 @@ namespace ConsoleApplication
                 }
             }
             //Print available rooms:
-            Console.WriteLine("Theese Rooms are not used the next five days:");
+            Console.WriteLine("These Rooms are not used the next five days:");
             foreach (var room in rooms)
             {
                 Console.WriteLine(room.RoomId + ": " + room.GetType().Name + " " + room.RoomName);
             }
             List<Clinician> availableClinicians =
-                context.Clinicians//Det her virker ikke - hiv dem ud enkeltvis
+                context.Clinicians//Det her virker måske - hiv dem evt ud enkeltvist
+                    .Include(c=>c.AssociatedBirths)
+                    .ThenInclude(x=>x.Birth)
                     .ToList();
+            
+
+            //Remove booked clinicians:
             foreach (var clinician in availableClinicians)
             {
-                Console.WriteLine(clinician.FullName + clinician.PersonId);
+                foreach (var birth in clinician.AssociatedBirths)
+                {
+                    if (birth.Birth.PlannedStartTime < DateTime.Now + TimeSpan.FromDays(5)
+                        && birth.Birth.PlannedStartTime > DateTime.Now)
+                    {//If booked for at birth the next 5 days
+                        availableClinicians.Remove(clinician);
+                        break;
+                    }
+                }
+            }
+            //Print clinicians
+            Console.WriteLine("These Clinicians are not booked to any births the next 5 days:");
+            foreach (var clinician in availableClinicians)
+            {
+                Console.WriteLine( clinician.PersonId+" " + clinician.FullName + ": " +clinician.GetType().Name);
             }
         }
 
@@ -93,6 +130,7 @@ namespace ConsoleApplication
             }
         }
 
-
+        //4.Show the maternity rooms and the four hours rest rooms in use withthe mother/parentsandchild/children using the room.
+        //5.Givena birth can planneda)Show therooms reserved the birthb)Show the clinicians assigned the birth
     }
 }
