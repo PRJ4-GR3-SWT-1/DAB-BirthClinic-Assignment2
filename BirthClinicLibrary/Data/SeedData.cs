@@ -10,6 +10,12 @@ namespace BirthClinicLibrary.Data
 {
     public class SeedData
     {
+        public SeedData(BirthDbContext db)
+        {
+            SeedRooms(db);
+            SeedStaff(db);
+        }
+
         public static void SeedRooms(BirthDbContext db)
         {
             var r = db.Room.FirstOrDefault();
@@ -19,6 +25,7 @@ namespace BirthClinicLibrary.Data
                 SeedBirthRooms(db);
                 SeedRestingRooms(db);
             }
+
         }
 
         private static void SeedRestingRooms(BirthDbContext db)
@@ -144,8 +151,170 @@ namespace BirthClinicLibrary.Data
             var s = db.Secretary.FirstOrDefault();
             if (s == null)
             {
-
+                SeesSecretary(db);
             }
+        }
+
+        private static void SeedDoctors(BirthDbContext db)
+        {
+            Person D1 = new Doctor("Dorthe");
+            Person D2 = new Doctor("Dennis");
+            Person D3 = new Doctor("Dina");
+            Person D4 = new Doctor("Daniel"); 
+            Person D5 = new Doctor("Daniella");
+
+            db.Add(D1);
+            db.Add(D2);
+            db.Add(D3);
+            db.Add(D4);
+            db.Add(D5);
+
+            db.SaveChanges();
+            Console.WriteLine("Doctors added.");
+        }
+
+        private static void SeedNurses(BirthDbContext db)
+        {
+            Person N1 = new Nurse("Nete");
+            Person N2 = new Nurse("Nathan");
+            Person N3 = new Nurse("Natalie");
+            Person N4 = new Nurse("Noel");
+            Person N5 = new Nurse("Nadja");
+            Person N6 = new Nurse("Nessa");
+            Person N7 = new Nurse("Naja");
+            Person N8 = new Nurse("Nikoline");
+            Person N9 = new Nurse("Nik");
+            Person N10 = new Nurse("Nikolaj");
+            Person N11 = new Nurse("Niklas");
+            Person N12 = new Nurse("Nor");
+            Person N13 = new Nurse("Nazarat");
+            Person N14 = new Nurse("Neo");
+            Person N15 = new Nurse("Nasir");
+            Person N16 = new Nurse("Niller");
+            Person N17 = new Nurse("Niko");
+            Person N18 = new Nurse("Niels");
+            Person N19 = new Nurse("Niels-Erik");
+            Person N20 = new Nurse("Niels-Ove");
+
+
+            db.Add(N1);
+            db.Add(N2);
+            db.Add(N3);
+            db.Add(N4);
+            db.Add(N5);
+            db.Add(N6);
+            db.Add(N7);
+            db.Add(N8);
+            db.Add(N9);
+            db.Add(N10);
+            db.Add(N11);
+            db.Add(N12);
+            db.Add(N13);
+            db.Add(N14);
+            db.Add(N15);
+            db.Add(N16);
+            db.Add(N17);
+            db.Add(N18);
+            db.Add(N19);
+            db.Add(N20);
+
+            db.SaveChanges();
+            Console.WriteLine("Nurses added.");
+        }
+
+        private static void SeedMidwives(BirthDbContext db)
+        {
+            Person M1 = new MidWife("Mary");
+            Person M2 = new MidWife("Malfred");
+            Person M3 = new MidWife("Marius");
+            Person M4 = new MidWife("Marianne");
+            Person M5 = new MidWife("Morten");
+            Person M6 = new MidWife("Marie");
+            Person M7 = new MidWife("Molly");
+            Person M8 = new MidWife("Mingming");
+            Person M9 = new MidWife("Mulle");
+            Person M10 = new MidWife("Mads");
+
+            db.Add(M1);
+            db.Add(M2);
+            db.Add(M3);
+            db.Add(M4);
+            db.Add(M5);
+            db.Add(M6);
+            db.Add(M7);
+            db.Add(M8);
+            db.Add(M9);
+            db.Add(M10);
+
+            db.SaveChanges();
+            Console.WriteLine("Midwives added.");
+        }
+
+        private static void SeedSHAssistans(BirthDbContext db)
+        {
+            Person SHA1 = new SocialHealthAssistant("Harry");
+            Person SHA2 = new SocialHealthAssistant("Harper");
+            Person SHA3 = new SocialHealthAssistant("Hans");
+            Person SHA4 = new SocialHealthAssistant("Hope");
+            Person SHA5 = new SocialHealthAssistant("Harriet");
+            Person SHA6 = new SocialHealthAssistant("Hal");
+            Person SHA7 = new SocialHealthAssistant("Hamlet");
+            Person SHA8 = new SocialHealthAssistant("Hubert");
+            Person SHA9 = new SocialHealthAssistant("Holger");
+            Person SHA10 = new SocialHealthAssistant("Holmer");
+            Person SHA11 = new SocialHealthAssistant("Hansi");
+            Person SHA12 = new SocialHealthAssistant("Hylle");
+            Person SHA13 = new SocialHealthAssistant("Henrik");
+            Person SHA14 = new SocialHealthAssistant("Hermione");
+            Person SHA15 = new SocialHealthAssistant("Heidi");
+            Person SHA16 = new SocialHealthAssistant("Helene");
+            Person SHA17 = new SocialHealthAssistant("Helena");
+            Person SHA18 = new SocialHealthAssistant("Hailey");
+            Person SHA19 = new SocialHealthAssistant("Henriette");
+            Person SHA20 = new SocialHealthAssistant("Hanne");
+
+            db.Add(SHA1);
+            db.Add(SHA2);
+            db.Add(SHA3);
+            db.Add(SHA4);
+            db.Add(SHA5);
+            db.Add(SHA6);
+            db.Add(SHA7);
+            db.Add(SHA8);
+            db.Add(SHA9);
+            db.Add(SHA10);
+            db.Add(SHA11);
+            db.Add(SHA12);
+            db.Add(SHA13);
+            db.Add(SHA14);
+            db.Add(SHA15);
+            db.Add(SHA16);
+            db.Add(SHA17);
+            db.Add(SHA18);
+            db.Add(SHA19);
+            db.Add(SHA20);
+
+            db.SaveChanges();
+            Console.WriteLine("Social and Health Assistans added.");
+
+
+
+        }
+
+        private static void SeesSecretary(BirthDbContext db)
+        {
+            Person s1 = new Secretary("Susan");
+            Person s2 = new Secretary("Simon");
+            Person s3 = new Secretary("Sam");
+            Person s4 = new Secretary("Susanne");
+
+            db.Add(s1);
+            db.Add(s2);
+            db.Add(s3);
+            db.Add(s4);
+
+            db.SaveChanges();
+            Console.WriteLine("Secretaries added.");
         }
     }
 }

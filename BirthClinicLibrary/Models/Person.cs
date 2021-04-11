@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using EFModels.Data;
 
 namespace BirthClinicLibrary.Models
 {
     public class Person
-    { 
+    {
+        public Person(string name)
+        {
+            FullName = name;
+        }
         public int PersonId { get; set; }
         public string FullName { get; set; }
         
@@ -12,8 +17,13 @@ namespace BirthClinicLibrary.Models
 
     public class Child : Person
     {
+        public Child(string name, Mother mother, Birth birth) : base(name)
+        {
+            Mother = mother;
+            Birth = birth;
+        }
         public Mother Mother { get; set; }
-        public Person Father { get; set; }
+        public FamilyMember Father { get; set; }
         public DateTime ActualBirthTime { get; set; }
         public Birth Birth { get; set; }
 
@@ -21,7 +31,7 @@ namespace BirthClinicLibrary.Models
 
     public class Clinician:Person
     {
-        public Clinician()
+        public Clinician(string name) : base(name)
         {
             AssociatedBirths = new List<ClinicianBirth>();
         }
@@ -29,15 +39,61 @@ namespace BirthClinicLibrary.Models
     }
     public class Secretary : Person
     {
+        public Secretary(string name) : base(name)
+        {
+
+        }
         
     }
     public class Mother : Person
     {
+        public Mother(string name):base(name)
+        {
+            Reservations = new List<Reservation>();
+        }
         //public Child Child { get; set; }
         public ICollection<Reservation> Reservations { get; set; }
     }
-    public class MidWife : Clinician { }
-    public class Doctor : Clinician { }
-    public class Nurse : Clinician { }
-    public class SocialHealthAssistant : Clinician { }
+
+    public class FamilyMember : Person
+    {
+        public FamilyMember(string name, string relation) : base(name)
+        {
+            Relation = relation;
+        }
+        public string Relation { get; set; }
+    }
+
+
+
+    public class MidWife : Clinician
+    {
+        public MidWife(string name) : base(name)
+        {
+
+        }
+
+    }
+
+    public class Doctor : Clinician
+    {
+        public Doctor(string name) : base(name)
+        {
+
+        }
+    }
+
+    public class Nurse : Clinician
+    {
+        public Nurse(string name) : base(name)
+        {
+        }
+    }
+
+    public class SocialHealthAssistant : Clinician
+    {
+        public SocialHealthAssistant(string name) : base(name)
+        {
+        }
+    }
 }
