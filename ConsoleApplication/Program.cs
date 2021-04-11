@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BirthClinicLibrary.Data;
 using BirthClinicLibrary.Models;
 using EFModels.Data;
 using Microsoft.EntityFrameworkCore;
@@ -31,15 +32,80 @@ namespace ConsoleApplication
             {
                 //context.Child.Add(child1);
                 //context.SaveChanges();
+                SeedData sd = new SeedData(context);
 
-              //  ShowPlannedBirths(context);
+                List<Doctor> doctors = context.Doctor.ToList();
+                List<MidWife> midWives = context.MidWife.ToList();
 
-              //  ShowAvailableRoomsAndClinicians(context);
+                Child child1 = new Child("Peter Petersen");
+                Birth birth1 = new Birth();
+                Mother mother1 = new Mother("Nikoline Petersen");
+                FamilyMember father1 = new FamilyMember("Peder Petersen", "Father");
+                context.Add(child1);
 
-//                ShowOngoingBirths(context);
+                context.SaveChanges();
+                birth1.Child = child1;
+                birth1.PlannedStartTime = DateTime.Now;
+                child1.Birth = birth1;
+                child1.Mother = mother1;
+                child1.FamilyMembers = new List<FamilyMember>();
+                child1.FamilyMembers.Add(father1);
+                mother1.Children = new List<Child>();
+                mother1.Children.Add(child1);
+
+                //
+                  ClinicianBirth CB1 = new ClinicianBirth();
+                  CB1.Birth = birth1;
+                  CB1.Clinician = doctors[0];
+                  ClinicianBirth CB2 = new ClinicianBirth();
+                  CB2.Birth = birth1;
+                  CB2.Clinician = midWives[0]; 
+                   doctors[0].AssociatedBirths = new List<ClinicianBirth>();
+                   doctors[0].AssociatedBirths.Add(CB1);
+                   midWives[0].AssociatedBirths = new List<ClinicianBirth>();
+                   midWives[0].AssociatedBirths.Add(CB2); 
+                //
+                   birth1.Clinicians = new List<ClinicianBirth>();
+                   birth1.Clinicians.Add(CB1);
+                   birth1.Clinicians.Add(CB2);
+                   //
+                   Reservation res1 = new Reservation();
+                   Reservation res2 = new Reservation();
+                   Reservation res3 = new Reservation();
+                   List <BirthRoom> BRoom = context.BirthRoom.ToList();
+                   List<MaternityRoom> MRoom = context.MaternityRoom.ToList();
+                   List<RestingRoom> RRoom = context.RestingRoom.ToList();
+
+                   res1.User = mother1;
+                   res1.ReservedRoom = BRoom[0];
+                   mother1.Reservations = new List<Reservation>();
+                   BRoom[0].Reservations = new List<Reservation>();
+                   mother1.Reservations.Add(res1);
+                   BRoom[0].Reservations.Add(res1);
+
+                  res2.User = mother1;
+                  res2.ReservedRoom = MRoom[0];
+                  MRoom[0].Reservations = new List<Reservation>();
+                  mother1.Reservations.Add(res2);
+                  MRoom[0].Reservations.Add(res2);
+
+                  res3.User = mother1;
+                  res3.ReservedRoom = RRoom[0];
+                  RRoom[0].Reservations = new List<Reservation>();
+                  mother1.Reservations.Add(res3);
+                  RRoom[0].Reservations.Add(res3); 
+
+
+                context.SaveChanges(); 
+
+                //   ShowPlannedBirths(context);
+
+                // ShowAvailableRoomsAndClinicians(context);
+
+                //                ShowOngoingBirths(context);
             }
 
-            
+
 
         }
 

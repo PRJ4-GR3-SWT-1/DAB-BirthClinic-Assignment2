@@ -5,9 +5,9 @@ namespace BirthClinicLibrary.Models
 {
    public class Room
     {
-        public Room(string name)
+        public Room(string roomName)
         {
-            RoomName = name;
+            RoomName = roomName;
             Reservations = new List<Reservation>();
         }
 
@@ -19,14 +19,14 @@ namespace BirthClinicLibrary.Models
 
    public class MaternityRoom : Room
    {
-       public MaternityRoom(string name) : base(name)
+       public MaternityRoom(string RoomName) : base(RoomName)
        {
 
        }
    }
    public class RestingRoom : Room
    {
-       public RestingRoom(string name) : base(name)
+       public RestingRoom(string RoomName) : base(RoomName)
        {
 
        }

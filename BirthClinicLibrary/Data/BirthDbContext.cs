@@ -54,6 +54,8 @@ namespace EFModels.Data
         public DbSet<Doctor> Doctor { get; set; }
         public DbSet<Nurse> Nurse { get; set; }
         public DbSet<Clinician> Clinicians { get; set; }
+        public DbSet<MidWife> MidWife { get; set; }
+        public DbSet<SocialHealthAssistant> SocialHealthAssistant { get; set; }
         //Birth:
         public DbSet<Birth> Birth { get; set; }
         //Reservation:

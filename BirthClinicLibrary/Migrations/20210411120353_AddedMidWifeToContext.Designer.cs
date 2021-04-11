@@ -4,14 +4,16 @@ using EFModels.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BirthClinicLibrary.Migrations
 {
     [DbContext(typeof(BirthDbContext))]
-    partial class BirthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210411120353_AddedMidWifeToContext")]
+    partial class AddedMidWifeToContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,13 +229,6 @@ namespace BirthClinicLibrary.Migrations
                     b.HasBaseType("BirthClinicLibrary.Models.Clinician");
 
                     b.HasDiscriminator().HasValue("Nurse");
-                });
-
-            modelBuilder.Entity("BirthClinicLibrary.Models.SocialHealthAssistant", b =>
-                {
-                    b.HasBaseType("BirthClinicLibrary.Models.Clinician");
-
-                    b.HasDiscriminator().HasValue("SocialHealthAssistant");
                 });
 
             modelBuilder.Entity("BirthClinicLibrary.Models.Birth", b =>

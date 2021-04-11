@@ -17,29 +17,28 @@ namespace BirthClinicLibrary.Models
 
     public class Child : Person
     {
-        public Child(string name, Mother mother, Birth birth) : base(name)
+        public Child(string FullName) : base(FullName)
         {
-            Mother = mother;
-            Birth = birth;
+
         }
         public Mother Mother { get; set; }
-        public FamilyMember Father { get; set; }
-        public DateTime ActualBirthTime { get; set; }
+        public List<FamilyMember> FamilyMembers { get; set; }
+        public DateTime Birthday { get; set; }
         public Birth Birth { get; set; }
 
     }
 
     public class Clinician:Person
     {
-        public Clinician(string name) : base(name)
+        public Clinician(string FullName) : base(FullName)
         {
-            AssociatedBirths = new List<ClinicianBirth>();
+          //  AssociatedBirths = new List<ClinicianBirth>();
         }
         public List<ClinicianBirth> AssociatedBirths { get; set; }
     }
     public class Secretary : Person
     {
-        public Secretary(string name) : base(name)
+        public Secretary(string FullName) : base(FullName)
         {
 
         }
@@ -47,7 +46,7 @@ namespace BirthClinicLibrary.Models
     }
     public class Mother : Person
     {
-        public Mother(string name):base(name)
+        public Mother(string FullName) :base(FullName)
         {
             Reservations = new List<Reservation>();
             Children = new List<Child>();
@@ -58,7 +57,7 @@ namespace BirthClinicLibrary.Models
 
     public class FamilyMember : Person
     {
-        public FamilyMember(string name, string relation) : base(name)
+        public FamilyMember(string FullName, string relation) : base(FullName)
         {
             Relation = relation;
         }
@@ -69,7 +68,7 @@ namespace BirthClinicLibrary.Models
 
     public class MidWife : Clinician
     {
-        public MidWife(string name) : base(name)
+        public MidWife(string FullName) : base(FullName)
         {
 
         }
@@ -78,7 +77,7 @@ namespace BirthClinicLibrary.Models
 
     public class Doctor : Clinician
     {
-        public Doctor(string name) : base(name)
+        public Doctor(string FullName) : base(FullName)
         {
 
         }
@@ -86,14 +85,14 @@ namespace BirthClinicLibrary.Models
 
     public class Nurse : Clinician
     {
-        public Nurse(string name) : base(name)
+        public Nurse(string FullName) : base(FullName)
         {
         }
     }
 
     public class SocialHealthAssistant : Clinician
     {
-        public SocialHealthAssistant(string name) : base(name)
+        public SocialHealthAssistant(string FullName) : base(FullName)
         {
         }
     }
