@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BirthClinicLibrary.Migrations
 {
     [DbContext(typeof(BirthDbContext))]
-    [Migration("20210409071932_reservations")]
-    partial class reservations
+    [Migration("20210409073219_reservations4")]
+    partial class reservations4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,18 +28,6 @@ namespace BirthClinicLibrary.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("BirthRoomReservationEnd")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("BirthRoomReservationStart")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("BirthRoomRoomId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BirthRoomRoomId1")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ClinicianPersonId")
                         .HasColumnType("int");
 
@@ -47,10 +35,6 @@ namespace BirthClinicLibrary.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("BirthId");
-
-                    b.HasIndex("BirthRoomRoomId");
-
-                    b.HasIndex("BirthRoomRoomId1");
 
                     b.HasIndex("ClinicianPersonId");
 
@@ -81,6 +65,34 @@ namespace BirthClinicLibrary.Migrations
                     b.ToTable("Person");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Person");
+                });
+
+            modelBuilder.Entity("BirthClinicLibrary.Models.Reservation", b =>
+                {
+                    b.Property<int>("ReservationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("ReservationEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ReservationStart")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ReservedRoomRoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserPersonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReservationId");
+
+                    b.HasIndex("ReservedRoomRoomId");
+
+                    b.HasIndex("UserPersonId");
+
+                    b.ToTable("Reservation");
                 });
 
             modelBuilder.Entity("BirthClinicLibrary.Models.Room", b =>
@@ -135,28 +147,6 @@ namespace BirthClinicLibrary.Migrations
                 {
                     b.HasBaseType("BirthClinicLibrary.Models.Person");
 
-                    b.Property<DateTime>("MaternityRoomReservationEnd")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("MaternityRoomReservationStart")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("MaternityRoomRoomId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("RestingRoomReservationEnd")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("RestingRoomReservationStart")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("RestingRoomRoomId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("MaternityRoomRoomId");
-
-                    b.HasIndex("RestingRoomRoomId");
-
                     b.HasDiscriminator().HasValue("Mother");
                 });
 
@@ -190,19 +180,9 @@ namespace BirthClinicLibrary.Migrations
 
             modelBuilder.Entity("BirthClinicLibrary.Models.Birth", b =>
                 {
-                    b.HasOne("BirthClinicLibrary.Models.Room", "BirthRoom")
-                        .WithMany()
-                        .HasForeignKey("BirthRoomRoomId");
-
-                    b.HasOne("BirthClinicLibrary.Models.BirthRoom", null)
-                        .WithMany("BirthReservations")
-                        .HasForeignKey("BirthRoomRoomId1");
-
                     b.HasOne("BirthClinicLibrary.Models.Clinician", null)
                         .WithMany("AssociatedBirths")
                         .HasForeignKey("ClinicianPersonId");
-
-                    b.Navigation("BirthRoom");
                 });
 
             modelBuilder.Entity("BirthClinicLibrary.Models.Person", b =>
@@ -210,6 +190,21 @@ namespace BirthClinicLibrary.Migrations
                     b.HasOne("BirthClinicLibrary.Models.Birth", null)
                         .WithMany("Clinicians")
                         .HasForeignKey("BirthId");
+                });
+
+            modelBuilder.Entity("BirthClinicLibrary.Models.Reservation", b =>
+                {
+                    b.HasOne("BirthClinicLibrary.Models.Room", "ReservedRoom")
+                        .WithMany("Reservations")
+                        .HasForeignKey("ReservedRoomRoomId");
+
+                    b.HasOne("BirthClinicLibrary.Models.Mother", "User")
+                        .WithMany("Reservations")
+                        .HasForeignKey("UserPersonId");
+
+                    b.Navigation("ReservedRoom");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BirthClinicLibrary.Models.Child", b =>
@@ -227,24 +222,14 @@ namespace BirthClinicLibrary.Migrations
                     b.Navigation("Mother");
                 });
 
-            modelBuilder.Entity("BirthClinicLibrary.Models.Mother", b =>
-                {
-                    b.HasOne("BirthClinicLibrary.Models.MaternityRoom", "MaternityRoom")
-                        .WithMany("MotherReservations")
-                        .HasForeignKey("MaternityRoomRoomId");
-
-                    b.HasOne("BirthClinicLibrary.Models.RestingRoom", "RestingRoom")
-                        .WithMany("MotherReservations")
-                        .HasForeignKey("RestingRoomRoomId");
-
-                    b.Navigation("MaternityRoom");
-
-                    b.Navigation("RestingRoom");
-                });
-
             modelBuilder.Entity("BirthClinicLibrary.Models.Birth", b =>
                 {
                     b.Navigation("Clinicians");
+                });
+
+            modelBuilder.Entity("BirthClinicLibrary.Models.Room", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("BirthClinicLibrary.Models.Clinician", b =>
@@ -252,19 +237,9 @@ namespace BirthClinicLibrary.Migrations
                     b.Navigation("AssociatedBirths");
                 });
 
-            modelBuilder.Entity("BirthClinicLibrary.Models.BirthRoom", b =>
+            modelBuilder.Entity("BirthClinicLibrary.Models.Mother", b =>
                 {
-                    b.Navigation("BirthReservations");
-                });
-
-            modelBuilder.Entity("BirthClinicLibrary.Models.MaternityRoom", b =>
-                {
-                    b.Navigation("MotherReservations");
-                });
-
-            modelBuilder.Entity("BirthClinicLibrary.Models.RestingRoom", b =>
-                {
-                    b.Navigation("MotherReservations");
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

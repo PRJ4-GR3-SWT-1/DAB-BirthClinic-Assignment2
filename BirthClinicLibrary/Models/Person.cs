@@ -23,9 +23,9 @@ namespace BirthClinicLibrary.Models
     {
         public Clinician()
         {
-            AssociatedBirths = new List<Birth>();
+            AssociatedBirths = new List<ClinicianBirth>();
         }
-        public ICollection<Birth> AssociatedBirths { get; set; }
+        public List<ClinicianBirth> AssociatedBirths { get; set; }
     }
     public class Secretary : Person
     {
@@ -40,6 +40,4 @@ namespace BirthClinicLibrary.Models
     public class Doctor : Clinician { }
     public class Nurse : Clinician { }
     public class SocialHealthAssistant : Clinician { }
-
-
 }
