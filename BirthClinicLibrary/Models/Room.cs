@@ -8,6 +8,7 @@ namespace BirthClinicLibrary.Models
         public Room(string name)
         {
             RoomName = name;
+            Reservations = new List<Reservation>();
         }
 
         public int RoomId { get; set; }
