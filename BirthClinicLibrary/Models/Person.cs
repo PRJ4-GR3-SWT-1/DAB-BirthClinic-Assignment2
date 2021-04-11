@@ -29,7 +29,7 @@ namespace BirthClinicLibrary.Models
 
     }
 
-    public class Clinician:Person
+    public virtual class Clinician:Person
     {
         public Clinician(string name) : base(name)
         {
