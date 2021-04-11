@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BirthClinicLibrary.Models;
 using EFModels.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConsoleApplication
 {
@@ -53,8 +54,21 @@ namespace ConsoleApplication
                 }
             }
 
-            
+
+
 
         }
+
+
+
+        public void addRooms(ModelBuilder mb)
+        {
+            mb.Entity<Room>().HasData(
+                new MaternityRoom() {RoomName = "M1"});
+
+
+        }
+
+
     }
 }

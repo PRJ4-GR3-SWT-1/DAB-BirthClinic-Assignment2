@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace BirthClinicLibrary.Models
 {
     public class Person
-    {
+    { 
         public int PersonId { get; set; }
         public string FullName { get; set; }
         
@@ -40,5 +40,6 @@ namespace BirthClinicLibrary.Models
     public class Doctor : Clinician { }
     public class Nurse : Clinician { }
     public class SocialHealthAssistant : Clinician { }
+
 
 }

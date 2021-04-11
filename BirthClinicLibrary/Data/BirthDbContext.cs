@@ -54,6 +54,8 @@ namespace EFModels.Data
         //Reservation:
         public DbSet<Reservation> Reservation { get; set; }
 
+        public DbSet<Secretary> Secretary { get; set; }
+
 
     }
 }
