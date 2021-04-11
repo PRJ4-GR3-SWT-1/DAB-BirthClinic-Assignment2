@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BirthClinicLibrary.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+
 //using Microsoft.EntityFrameworkCore.Extensions;
 
 
@@ -14,6 +16,8 @@ namespace EFModels.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.LogTo(Console.WriteLine, new[] {RelationalEventId.CommandExecuted})
+                .EnableSensitiveDataLogging();
             optionsBuilder.UseSqlServer(
                 @"Data Source=(localdb)\DABServer;Initial Catalog=BirthClinic;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }

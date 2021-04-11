@@ -26,17 +26,34 @@ namespace BirthClinicLibrary.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ClinicianPersonId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("PlannedStartTime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("BirthId");
 
+                    b.ToTable("Birth");
+                });
+
+            modelBuilder.Entity("BirthClinicLibrary.Models.ClinicianBirth", b =>
+                {
+                    b.Property<int>("ClinicianBirthId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BirthId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ClinicianPersonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ClinicianBirthId");
+
+                    b.HasIndex("BirthId");
+
                     b.HasIndex("ClinicianPersonId");
 
-                    b.ToTable("Birth");
+                    b.ToTable("ClinicianBirth");
                 });
 
             modelBuilder.Entity("BirthClinicLibrary.Models.Person", b =>
@@ -46,9 +63,6 @@ namespace BirthClinicLibrary.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BirthId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -57,8 +71,6 @@ namespace BirthClinicLibrary.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PersonId");
-
-                    b.HasIndex("BirthId");
 
                     b.ToTable("Person");
 
@@ -121,13 +133,18 @@ namespace BirthClinicLibrary.Migrations
                     b.Property<DateTime>("ActualBirthTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("BirthId1")
+                    b.Property<int?>("BirthId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FatherPersonId")
                         .HasColumnType("int");
 
                     b.Property<int?>("MotherPersonId")
                         .HasColumnType("int");
 
-                    b.HasIndex("BirthId1");
+                    b.HasIndex("BirthId");
+
+                    b.HasIndex("FatherPersonId");
 
                     b.HasIndex("MotherPersonId");
 
@@ -176,18 +193,19 @@ namespace BirthClinicLibrary.Migrations
                     b.HasDiscriminator().HasValue("Doctor");
                 });
 
-            modelBuilder.Entity("BirthClinicLibrary.Models.Birth", b =>
+            modelBuilder.Entity("BirthClinicLibrary.Models.ClinicianBirth", b =>
                 {
-                    b.HasOne("BirthClinicLibrary.Models.Clinician", null)
-                        .WithMany("AssociatedBirths")
-                        .HasForeignKey("ClinicianPersonId");
-                });
-
-            modelBuilder.Entity("BirthClinicLibrary.Models.Person", b =>
-                {
-                    b.HasOne("BirthClinicLibrary.Models.Birth", null)
+                    b.HasOne("BirthClinicLibrary.Models.Birth", "Birth")
                         .WithMany("Clinicians")
                         .HasForeignKey("BirthId");
+
+                    b.HasOne("BirthClinicLibrary.Models.Clinician", "Clinician")
+                        .WithMany("AssociatedBirths")
+                        .HasForeignKey("ClinicianPersonId");
+
+                    b.Navigation("Birth");
+
+                    b.Navigation("Clinician");
                 });
 
             modelBuilder.Entity("BirthClinicLibrary.Models.Reservation", b =>
@@ -209,13 +227,19 @@ namespace BirthClinicLibrary.Migrations
                 {
                     b.HasOne("BirthClinicLibrary.Models.Birth", "Birth")
                         .WithMany()
-                        .HasForeignKey("BirthId1");
+                        .HasForeignKey("BirthId");
+
+                    b.HasOne("BirthClinicLibrary.Models.Person", "Father")
+                        .WithMany()
+                        .HasForeignKey("FatherPersonId");
 
                     b.HasOne("BirthClinicLibrary.Models.Mother", "Mother")
                         .WithMany()
                         .HasForeignKey("MotherPersonId");
 
                     b.Navigation("Birth");
+
+                    b.Navigation("Father");
 
                     b.Navigation("Mother");
                 });
