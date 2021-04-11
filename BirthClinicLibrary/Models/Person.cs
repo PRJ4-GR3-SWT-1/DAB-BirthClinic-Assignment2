@@ -33,7 +33,7 @@ namespace BirthClinicLibrary.Models
     }
     public class Mother : Person
     {
-        //public Child Child { get; set; }
+        public List<Child> Children { get; set; }
         public ICollection<Reservation> Reservations { get; set; }
     }
     public class MidWife : Clinician { }

@@ -55,8 +55,18 @@ namespace ConsoleApplication
                     .Include(r=>r.User)
                     .ToList();
 
-            List<Birth> births;
-           
+            foreach (Reservation res in reservations)
+            {
+               // res.User.Children[0].Birth.Clinicians
+            }
+
+            /*
+            List<Birth> births =
+                context.Birth
+                    .Where(b => b.PlannedStartTime < DateTime.Now)
+                    .ToList();
+
+                births[0].*/
         }
 
         private static void ShowAvailableRoomsAndClinicians(BirthDbContext context)
