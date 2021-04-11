@@ -4,9 +4,9 @@ using EFModels.Data;
 
 namespace BirthClinicLibrary.Models
 {
-    public class Person
+    public abstract class Person
     {
-        public Person(string name)
+        protected Person(string name)
         {
             FullName = name;
         }
@@ -29,7 +29,7 @@ namespace BirthClinicLibrary.Models
 
     }
 
-    public virtual class Clinician:Person
+    public class Clinician:Person
     {
         public Clinician(string name) : base(name)
         {
