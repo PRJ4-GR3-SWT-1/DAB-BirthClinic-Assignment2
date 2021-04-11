@@ -5,6 +5,7 @@ using BirthClinicLibrary.Data;
 using BirthClinicLibrary.Models;
 using EFModels.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ConsoleApplication
 {
@@ -103,6 +104,33 @@ namespace ConsoleApplication
                 // ShowAvailableRoomsAndClinicians(context);
 
                 //                ShowOngoingBirths(context);
+                bool running = true;
+                while (running) { 
+                    Console.WriteLine("Muligheder: ");
+                    Console.WriteLine("1: Vis planlagte fødsler: ");
+                    Console.WriteLine("2: Ledige rum og klinikarbejdere ");
+                    Console.WriteLine("3: Aktuelt pågående fødsler ");
+                    Console.WriteLine("x: Luk ");
+                    var key=Console.ReadKey();
+                    switch (key.Key)
+                    {
+                        case ConsoleKey.D1:
+                            ShowPlannedBirths(context);
+                            break;
+                        case ConsoleKey.D2:
+                            ShowAvailableRoomsAndClinicians(context);
+                            break;
+                        case ConsoleKey.D3:
+                            ShowOngoingBirths(context);
+                            break;
+                        case ConsoleKey.X:
+                            running = false;
+                            break;
+                        default:
+                            Console.WriteLine("Ugyldigt valg");
+                            break;
+                    }
+                }
             }
 
 
