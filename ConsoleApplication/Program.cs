@@ -32,11 +32,11 @@ namespace ConsoleApplication
                 //context.Child.Add(child1);
                 //context.SaveChanges();
 
-                ShowPlannedBirths(context);
+              //  ShowPlannedBirths(context);
 
-                ShowAvailableRoomsAndClinicians(context);
+              //  ShowAvailableRoomsAndClinicians(context);
 
-                ShowOngoingBirths(context);
+//                ShowOngoingBirths(context);
             }
 
             

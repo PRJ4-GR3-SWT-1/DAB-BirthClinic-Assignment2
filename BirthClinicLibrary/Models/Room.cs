@@ -33,7 +33,7 @@ namespace BirthClinicLibrary.Models
    }
    public class BirthRoom : Room
    {
-       public BirthRoom(string name) : base(name)
+       public BirthRoom(string RoomName) : base(RoomName)
        {
 
        }
