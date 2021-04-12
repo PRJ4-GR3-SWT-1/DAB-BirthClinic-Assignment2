@@ -328,7 +328,8 @@ namespace ConsoleApplication
             //Show planned births for the coming three days
             List<Birth> plannedBirths =
                 context.Birth
-                    .Where(b => b.PlannedStartTime < (DateTime.Now+new TimeSpan(3,0,0,0)) && (b.PlannedStartTime > (DateTime.Now)))
+                    .Where(b => b.PlannedStartTime < (DateTime.Now/*+new TimeSpan(3,0,0,0)*/))
+                    .Where(b=>b.PlannedStartTime > (DateTime.Now))
                     .Include(b=>b.Child)
                     .Include(b=>b.Clinicians)
                     .ThenInclude(cb=>cb.Clinician)
