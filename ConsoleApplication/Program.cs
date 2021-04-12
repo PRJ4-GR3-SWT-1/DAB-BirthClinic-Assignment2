@@ -53,6 +53,7 @@ namespace ConsoleApplication
                     Console.WriteLine("5: Vis reserverede rum og associeret personale til specifik fødsel");
                     Console.WriteLine("F: Færdiggør reservation af rum ");
                     Console.WriteLine("B: Lav en reservation til en fødsel");
+                    Console.WriteLine("A: Annuler reservation af rum ");
                     Console.WriteLine("x: Luk ");
                     var key=Console.ReadKey();
                     switch (key.Key)
@@ -86,6 +87,9 @@ namespace ConsoleApplication
                         case ConsoleKey.B:
                             AddBirth(context);
                             break;
+                        case ConsoleKey.A:
+                            CancelRoomReservation(context);
+                            break;
                         default:
                             Console.WriteLine("Ugyldigt valg");
                             break;
@@ -97,17 +101,24 @@ namespace ConsoleApplication
 
         }
 
+        private static void CancelRoomReservation(BirthDbContext context)
+        {
+            int id = inputID();
+            var res = context.Reservation.Single(r => r.ReservationId == id);
+            if (res != null)
+            {
+                Console.WriteLine("Reservation found. Removing now");
+                context.Remove<Reservation>(res);
+                context.SaveChanges();
+            }
+            else Console.WriteLine("Could not find reservation. Nothing is canceled");
+            
+        }
+
         private static void FinnishRoomReservation(BirthDbContext context)
         {
-            bool isNumber = false;
-            int id = 0;
-            while (!isNumber)
-            {
-                Console.WriteLine("Type reservation ID (x to escape)");
-                var input = Console.ReadLine();
-                if (input == "x") return;
-                isNumber = int.TryParse(input, out id);
-            }
+            
+            int id = inputID();
 
 
 
@@ -124,6 +135,20 @@ namespace ConsoleApplication
                 Console.WriteLine("Reservation not found.");
                 FinnishRoomReservation(context);
             }
+        }
+
+        private static int inputID()
+        {
+            bool isNumber = false;
+            int id =0;
+            while (!isNumber)
+            {
+                Console.WriteLine("Type reservation ID (x to escape)");
+                var input = Console.ReadLine();
+                if (input == "x") return 0;
+                isNumber = int.TryParse(input, out id);
+            }
+            return id;
         }
 
         //Show the at current time ongoing births with information about the birth, parents, clinicians associated and the birth room.
@@ -214,7 +239,8 @@ namespace ConsoleApplication
             //Show planned births for the coming three days
             List<Birth> plannedBirths =
                 context.Birth
-                    .Where(b => b.PlannedStartTime < (DateTime.Now+new TimeSpan(3,0,0,0)) && (b.PlannedStartTime > (DateTime.Now)))
+                    .Where(b => b.PlannedStartTime < (DateTime.Now/*+new TimeSpan(3,0,0,0)*/))
+                    .Where(b=>b.PlannedStartTime > (DateTime.Now))
                     .Include(b=>b.Child)
                     .Include(b=>b.Clinicians)
                     .ThenInclude(cb=>cb.Clinician)
