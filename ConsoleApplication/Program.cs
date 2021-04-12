@@ -248,5 +248,34 @@ namespace ConsoleApplication
 
         //4.Show the maternity rooms and the four hours rest rooms in use withthe mother/parentsandchild/children using the room.
         //5.Givena birth can planneda)Show therooms reserved the birthb)Show the clinicians assigned the birth
+        private static void ShowRoomsAndClinicianReservedForBirth(BirthDbContext context)
+        {
+            Console.WriteLine("Which BirthID are you searching for?");
+            var input = Console.ReadLine();
+            var inputId = int.Parse(input);
+            Birth birth =
+                context.Birth
+                    
+                    .Include(b => b.Child as Child)
+                    .ThenInclude(c => c.Mother)
+                    .ThenInclude(m => m.Reservations)
+                    .ThenInclude(r => r.ReservedRoom)
+                    .Include(b => b.Clinicians)
+                    .SingleOrDefault(b => b.BirthId == inputId);
+
+            Console.WriteLine("BirthID: " + birth.BirthId + "Associated Clinicians: ");
+                foreach (var cb in birth.Clinicians)
+                {
+                    Console.WriteLine("   " + cb.Clinician.FullName + " " + cb.Clinician.GetType().Name);
+                }
+
+            Console.WriteLine("Reserved Rooms: ");
+                Child c = birth.Child as Child;
+                foreach (var r in c.Mother.Reservations)
+                {
+                    Console.WriteLine(" "+r.ReservedRoom.RoomName);
+                }
+
+        }
     }
 }
