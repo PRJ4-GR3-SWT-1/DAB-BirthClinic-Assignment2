@@ -209,7 +209,7 @@ namespace ConsoleApplication
             //Show planned births for the coming three days
             List<Birth> plannedBirths =
                 context.Birth
-                    .Where(b => b.PlannedStartTime < (DateTime.Now/*+new TimeSpan(3,0,0,0)*/))
+                    .Where(b => b.PlannedStartTime < (DateTime.Now.AddDays(3)))
                     .Where(b=>b.PlannedStartTime > (DateTime.Now))
                     .Include(b=>b.Child)
                     .Include(b=>b.Clinicians)
@@ -218,11 +218,12 @@ namespace ConsoleApplication
             Console.WriteLine("Planned births next 3 days:");
             foreach (var birth in plannedBirths)
             {
-                Console.WriteLine("BirthID: " +birth.BirthId+"Planned starttime: "+ birth.PlannedStartTime+ "Name: "+ birth.Child.FullName);
-                Console.WriteLine(" Associated Clinicians:");
+                Console.WriteLine("BirthID: " +birth.BirthId+"\nPlanned starttime: "
+                                  + birth.PlannedStartTime+ "\nName: "+ birth.Child.FullName);
+                Console.WriteLine("Associated Clinicians: ");
                 foreach (var cb in birth.Clinicians)
                 {
-                    Console.WriteLine("   " + cb.Clinician.FullName + " " + cb.Clinician.GetType().Name);
+                    Console.WriteLine("   " + cb.Clinician.FullName + " (" + cb.Clinician.GetType().Name + ")");
                 }
             }
         }
