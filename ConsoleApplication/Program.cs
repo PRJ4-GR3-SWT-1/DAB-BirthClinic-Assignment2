@@ -48,8 +48,8 @@ namespace ConsoleApplication
                     Console.WriteLine("Muligheder: ");
                     Console.WriteLine("1: Vis planlagte fødsler: ");
                     Console.WriteLine("2: Ledige rum og klinikarbejdere ");
-                    Console.WriteLine("3: Aktuelt pågående fødsler ");
-                    Console.WriteLine("4: Maternity rooms and resting rooms in use right now.");
+                    Console.WriteLine("3: Aktuelt igangværende fødsler ");
+                    Console.WriteLine("4: Værelser i brug lige nu (ikke fødselsrum)");
                     Console.WriteLine("5: Vis reserverede rum og associeret personale til specifik fødsel");
                     Console.WriteLine("F: Færdiggør reservation af rum ");
                     Console.WriteLine("B: Lav en reservation til en fødsel");
