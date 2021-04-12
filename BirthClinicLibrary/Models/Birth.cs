@@ -11,7 +11,7 @@ namespace BirthClinicLibrary.Models
             Clinicians = new List<ClinicianBirth>();
         }
         public int BirthId { get; set; }
-        public Person Child { get; set; }
+        public Child Child { get; set; }
 
        
         

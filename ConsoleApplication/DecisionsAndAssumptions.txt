@@ -14,6 +14,7 @@ Personale:
 -- Midwife: navn med M
 - Man kan kun have én stilling i klinikken. Fx. Man kan ikke både være læge og sygeplejeske. 
 - Klinisk personale kan kun være tilknyttet én fødsel ad gangen. 
+- Klinisk personale er tilknyttet en fødsel i tidsintervaller a 5 timer fra planlagt fødselsstart. 
 
 
 Øvrige personer (Child, Mother, FamiliyMember)

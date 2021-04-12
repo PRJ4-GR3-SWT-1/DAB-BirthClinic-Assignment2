@@ -24,7 +24,6 @@ namespace BirthClinicLibrary.Models
         public Mother Mother { get; set; }
         public List<FamilyMember> FamilyMembers { get; set; }
         public DateTime Birthday { get; set; }
-        public Birth Birth { get; set; }
 
     }
 
