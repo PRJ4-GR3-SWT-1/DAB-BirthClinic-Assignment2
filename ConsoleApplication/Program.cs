@@ -5,6 +5,7 @@ using BirthClinicLibrary.Data;
 using BirthClinicLibrary.Models;
 using EFModels.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ConsoleApplication
@@ -226,11 +227,19 @@ namespace ConsoleApplication
             List<Birth> plannedBirths =
                 context.Birth
                     .Where(b => b.PlannedStartTime < (DateTime.Now/*+new TimeSpan(3,0,0,0)*/))
+                    .Include(b=>b.Child)
+                    .Include(b=>b.Clinicians)
+                    .ThenInclude(cb=>cb.Clinician)
                     .ToList();
             Console.WriteLine("Planned births next 3 days:");
             foreach (var birth in plannedBirths)
             {
-                Console.WriteLine(birth.BirthId);
+                Console.WriteLine("BirthID: " +birth.BirthId+"Planned starttime: "+ birth.PlannedStartTime+ "Name: "+ birth.Child.FullName);
+                Console.WriteLine(" Associated Clinicians:");
+                foreach (var cb in birth.Clinicians)
+                {
+                    Console.WriteLine("   " + cb.Clinician.FullName + " " + cb.Clinician.GetType().Name);
+                }
             }
         }
 
