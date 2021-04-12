@@ -1,6 +1,6 @@
 ﻿This README file will explain (in Danish) how to use the system.
 
-1. Der skal på computeren oprettes en local database server med navnet "DABServer" og herefter en database der hedder "BirthClinic". 
+1. Der skal på computeren oprettes en local MSSQL database-server med navnet "DABServer". Programmet sørger selv for at oprette en databse med navnet "BirthClinic", hvis den ikke allerede eksisterer.
 2. Herefter kan programmet køres.
 3. Der er en menu tilgængelig. Man kan vælge mellem 5 forskellige cases: 
 	1. Vis planlagte fødsler.

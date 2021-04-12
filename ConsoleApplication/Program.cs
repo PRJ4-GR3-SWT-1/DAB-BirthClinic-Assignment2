@@ -20,7 +20,8 @@ namespace ConsoleApplication
 
             using (var context = new BirthDbContext())
             {
-
+                context.Database.EnsureCreated();
+                Console.WriteLine("Databasen eksisterer, og context er defineret");
                 SeedData sd = new SeedData(context);
 
                 
