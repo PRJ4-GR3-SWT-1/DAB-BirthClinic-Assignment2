@@ -335,7 +335,37 @@ namespace ConsoleApplication
             }
         }
 
-        //4.Show the maternity rooms and the four hours rest rooms in use withthe mother/parentsandchild/children using the room.
+        //4.Show the maternity rooms and the four hours rest rooms in use with the mother/parents and child/children using the room.
+        private static void ShowMaternityRoomsAndRestingRoomsInUse(BirthDbContext context)
+        {
+            List<Reservation> maternityRoomsAndRestingRooms =
+                context.Reservation
+                    .Where(r => r.ReservationStart < (DateTime.Now))
+                    .Where(r=>r.ReservationEnd > (DateTime.Now))
+                    .Where(r=>r.ReservedRoom is MaternityRoom || r.ReservedRoom is RestingRoom)
+                    .Include(r => r.ReservedRoom)
+                    .Include(r => r.User)
+                    .ThenInclude(m => m.Children)
+                    .ThenInclude(c => c.FamilyMembers)
+                    .ToList();
+            foreach (var reservation in maternityRoomsAndRestingRooms)
+            {
+                Console.WriteLine("Room: "
+                                  + reservation.ReservedRoom.RoomName
+                                  + " is reserved by " + reservation.User.FullName
+                                  + ".\n Name of child(ren): ");
+                foreach (var c in reservation.User.Children) 
+                {
+                    Console.WriteLine(c.FullName + ". ");
+                    foreach (var fm in c.FamilyMembers)
+                    {
+                        Console.WriteLine(". \n Familymember: " + fm.FullName + "Relation: " + fm.Relation);
+                    }
+                }
+            }
+        }
+
+
         //5.Givena birth can planneda)Show therooms reserved the birthb)Show the clinicians assigned the birth
     }
 }
