@@ -50,6 +50,7 @@ namespace ConsoleApplication
                     Console.WriteLine("2: Ledige rum og klinikarbejdere ");
                     Console.WriteLine("3: Aktuelt pågående fødsler ");
                     Console.WriteLine("4: Maternity rooms and resting rooms in use right now.");
+                    Console.WriteLine("5: Vis reserverede rum og associeret personale til specifik fødsel");
                     Console.WriteLine("F: Færdiggør reservation af rum ");
                     Console.WriteLine("B: Lav en reservation til en fødsel");
                     Console.WriteLine("x: Luk ");
@@ -71,6 +72,10 @@ namespace ConsoleApplication
                         case ConsoleKey.D4:
                         case ConsoleKey.NumPad4:
                             ShowMaternityRoomsAndRestingRoomsInUse(context);
+                            break;
+                        case ConsoleKey.D5:
+                        case ConsoleKey.NumPad5:
+                            ShowRoomsAndClinicianReservedForBirth(context);
                             break;
                         case ConsoleKey.X:
                             running = false;
