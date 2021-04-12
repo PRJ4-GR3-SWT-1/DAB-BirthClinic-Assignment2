@@ -1,0 +1,28 @@
+﻿Beslutninger og antagelser foretaget i forbindelse med opsætning af database og adgangssystem til informationer kan findes her. 
+
+Personale: 
+- En sekretær er ikke med til en fødsel ergo er det ikke klinikpersonale. 
+- Der er altid 10 jordmødre til stede på klinikken. 
+- Der er altid 5 læger til stede på klinikken. 
+- Der er altid 20 sygeplejesker og 20 sosu-assistener til stede på klinikken. 
+- Yderligere personal medgår ikke i systemet i denne omgang. 
+- Al personale er navngivet i eksemplet efter profession:
+-- Doctor: navn med D
+-- Social and Health assistant: navn med H
+-- Sekretary: navn med S 
+-- osv.
+
+Fødsler:
+- Man kan ikke føde mere end ét barn ad gangen på denne fødeklinik (tvillinger, trillinger mm. henvises til et hospital). 
+- Barnet kan have andre familiemedlemmer tilknyttet. Evt. relation til barnet skal noteres. 
+- Der skal være mindst én midwife tilknyttet en fødsel. 
+
+Værelser: 
+- Ved indskrivelse af en mor, kan der laves en bookning af et værelse. 
+
+
+
+
+
+
+
