@@ -142,15 +142,35 @@ namespace ConsoleApplication
             List<Reservation> reservations =
                 context.Reservation
                     .Where(reservation => reservation.ReservedRoom is BirthRoom)
-                    .Where(r=>r.ReservationStart<DateTime.Now
-                    && r.ReservationEnd>DateTime.Now)
+                    .Where(r=>r.ReservationStart<DateTime.Now)
+                    .Where(r=>r.ReservationEnd>DateTime.Now)//Assuming current reservations of birthrooms is current births
                     .Include(r => r.ReservedRoom)
                     .Include(r=>r.User)
+                    .ThenInclude(u=>u.Children)
+                    .ThenInclude(c=>c.FamilyMembers)
                     .ToList();
-
+            Console.WriteLine("Current BirthRoom uses:");
             foreach (Reservation res in reservations)
             {
-               // res.User.Children[0].Birth.Clinicians
+                Console.WriteLine(res.ReservedRoom.RoomName);
+                foreach (var child in res.User.Children)
+                {
+                    Console.WriteLine(" Child name: "+ child.FullName + " Mother: "+child.Mother.FullName + " Family:");
+                    foreach (var member in child.FamilyMembers)
+                    {
+                        Console.WriteLine("  "+member.Relation+": "+member.FullName);
+                    }
+
+                    var birth = context.Birth
+                        .Include(b => b.Clinicians)
+                        .ThenInclude(c => c.Clinician)
+                        .Single(b => b.Child.PersonId == child.PersonId);
+                    Console.WriteLine(" Associated Clinicians:");
+                    foreach (var cb in birth.Clinicians)
+                    {
+                        Console.WriteLine("  "+cb.Clinician.GetType().Name + ": " + cb.Clinician.FullName);
+                    }
+                }
             }
 
             /*
