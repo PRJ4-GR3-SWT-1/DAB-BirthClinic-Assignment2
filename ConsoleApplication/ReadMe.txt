@@ -26,5 +26,7 @@
 		- Man kan annullere en reservation af rum ved at indtaste reservations id.
 4. Til sidst kan man afslutte programmet ved at trykke "x".
 
-************************** OBS ***********************
+************************** OBS ******************************
 Bemærk at der kan læses nærmere om systemrelevante beslutninger og antagelser i .txt-filen "Decisions and Assumptions".
+************************** Ekstra ***************************
+For yderligere overblik over indholdet af databasen, se ERD (Entity relationsship Diagram) vedlagt i DDS_ERD_Diagram-mappen. 
