@@ -4,22 +4,39 @@ Personale:
 - En sekretær er ikke med til en fødsel ergo er det ikke klinikpersonale. 
 - Der er altid 10 jordmødre til stede på klinikken. 
 - Der er altid 5 læger til stede på klinikken. 
-- Der er altid 20 sygeplejesker og 20 sosu-assistener til stede på klinikken. 
+- Der er altid 20 sygeplejesker til stede på klinikken. 
+- Der er altid 20 sosu-assistener til stede på klinikken. 
 - Yderligere personal medgår ikke i systemet i denne omgang. 
-- Al personale er navngivet i eksemplet efter profession:
+- Al personale er navngivet i eksemplet efter profession for nemheds- og overbliksskyld:
 -- Doctor: navn med D
 -- Social and Health assistant: navn med H
 -- Sekretary: navn med S 
--- osv.
+-- Midwife: navn med M
+- Man kan kun have én stilling i klinikken. Fx. Man kan ikke både være læge og sygeplejeske. 
+- Klinisk personale kan kun være tilknyttet én fødsel ad gangen. 
+
+
+Øvrige personer (Child, Mother, FamiliyMember)
+- Barnet skal have en mor tilknyttet. 
+- Barnet kan have andre familiemedlemmer tilknyttet. Evt. relation til barnet skal noteres. 
+- Evt. reservationer af værelser knyttes til mor. 
 
 Fødsler:
 - Man kan ikke føde mere end ét barn ad gangen på denne fødeklinik (tvillinger, trillinger mm. henvises til et hospital). 
-- Barnet kan have andre familiemedlemmer tilknyttet. Evt. relation til barnet skal noteres. 
 - Der skal være mindst én midwife tilknyttet en fødsel. 
+- Der kan være mere personale tilknyttet en fødsel. 
+- Der skal være ét barn tilknyttet en fødsel. 
 
 Værelser: 
-- Ved indskrivelse af en mor, kan der laves en bookning af et værelse. 
+- Ved indskrivelse af en mor kan der laves en bookning af et værelse. 
+- Der findes ikke nogle rum som ikke er af typen "Maternity room", "Resting room" eller "Birth room". 
+- Værelset kan ikke bookes baglæns. 
+- Et værelse kan ikke være booket til flere mødre på samme tidspunkt. 
+- Der tages som udgangspunkt ikke hensyn til rengøring af lokaler mellem fødsler. 
 
+Reservationer:
+- Skal have et start- og et sluttidspunkt. 
+- Skal have en mor og et værelse forbundet.
 
 
 

@@ -5,6 +5,7 @@ using BirthClinicLibrary.Data;
 using BirthClinicLibrary.Models;
 using EFModels.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ConsoleApplication
@@ -171,12 +172,15 @@ namespace ConsoleApplication
                     switch (key.Key)
                     {
                         case ConsoleKey.D1:
+                        case ConsoleKey.NumPad1:
                             ShowPlannedBirths(context);
                             break;
                         case ConsoleKey.D2:
+                        case ConsoleKey.NumPad2:
                             ShowAvailableRoomsAndClinicians(context);
                             break;
                         case ConsoleKey.D3:
+                        case ConsoleKey.NumPad3:
                             ShowOngoingBirths(context);
                             break;
                         case ConsoleKey.X:
@@ -228,52 +232,52 @@ namespace ConsoleApplication
                     //.Where(r=>r.Reservations.ReservationStart>DateTime.Now+TimeSpan.FromDays(5))
                     //.Where(r=>r.ReservedRoom.GetType()==typeof(BirthRoom))
                     .ToList();
-            //Remove reserved rooms:
+            //print available rooms:
+            Console.WriteLine("Ledige Rum:");
+
             foreach (var room in rooms)
             {
+                bool booked = false;
                 foreach (var reservation in room.Reservations)
                 {
-                    if (reservation.ReservationStart > DateTime.Now + TimeSpan.FromDays(5)) ; //Rummet skal først bruges om lang tid;
-                    else if (reservation.ReservationEnd < DateTime.Now) ;//Reservationen er i fortid
-                    else//Remove room from list
+                    
+                    if (reservation.ReservationStart < DateTime.Now + TimeSpan.FromDays(5) //Reservation starter inden for 5 dage
+                   && reservation.ReservationEnd > DateTime.Now) ;//...og slutter en gang i fremtiden
+                    //Remove room from list
                     {
-                        rooms.Remove(room);
+                        booked = true;
                         break;
                     }
                 }
+                if(!booked) Console.WriteLine(room.RoomId + ": " + room.GetType().Name + " " + room.RoomName);
             }
-            //Print available rooms:
-            Console.WriteLine("These Rooms are not used the next five days:");
-            foreach (var room in rooms)
-            {
-                Console.WriteLine(room.RoomId + ": " + room.GetType().Name + " " + room.RoomName);
-            }
-            List<Clinician> availableClinicians =
+            
+            List<Clinician> clinicians =
                 context.Clinicians//Det her virker måske - hiv dem evt ud enkeltvist
                     .Include(c=>c.AssociatedBirths)
                     .ThenInclude(x=>x.Birth)
                     .ToList();
-            
 
-            //Remove booked clinicians:
-            foreach (var clinician in availableClinicians)
+
+            //Print available clinicians:
+            Console.WriteLine("\nLedige Klinikarbejdere:");
+
+            foreach (var clinician in clinicians)
             {
+                bool booked = false;
                 foreach (var birth in clinician.AssociatedBirths)
                 {
                     if (birth.Birth.PlannedStartTime < DateTime.Now + TimeSpan.FromDays(5)
                         && birth.Birth.PlannedStartTime > DateTime.Now)
                     {//If booked for at birth the next 5 days
-                        availableClinicians.Remove(clinician);
+                        booked = true;
                         break;
                     }
                 }
+                if(!booked) Console.WriteLine(clinician.PersonId + " " + clinician.FullName + ": " + clinician.GetType().Name);
+
             }
-            //Print clinicians
-            Console.WriteLine("These Clinicians are not booked to any births the next 5 days:");
-            foreach (var clinician in availableClinicians)
-            {
-                Console.WriteLine( clinician.PersonId+" " + clinician.FullName + ": " +clinician.GetType().Name);
-            }
+           
         }
 
         private static void ShowPlannedBirths(BirthDbContext context)
@@ -281,12 +285,20 @@ namespace ConsoleApplication
             //Show planned births for the coming three days
             List<Birth> plannedBirths =
                 context.Birth
-                    .Where(b => b.PlannedStartTime < (DateTime.Now/*+new TimeSpan(3,0,0,0)*/))
+                    .Where(b => b.PlannedStartTime < (DateTime.Now+new TimeSpan(3,0,0,0)) && (b.PlannedStartTime > (DateTime.Now)))
+                    .Include(b=>b.Child)
+                    .Include(b=>b.Clinicians)
+                    .ThenInclude(cb=>cb.Clinician)
                     .ToList();
             Console.WriteLine("Planned births next 3 days:");
             foreach (var birth in plannedBirths)
             {
-                Console.WriteLine(birth.BirthId);
+                Console.WriteLine("BirthID: " +birth.BirthId+"Planned starttime: "+ birth.PlannedStartTime+ "Name: "+ birth.Child.FullName);
+                Console.WriteLine(" Associated Clinicians:");
+                foreach (var cb in birth.Clinicians)
+                {
+                    Console.WriteLine("   " + cb.Clinician.FullName + " " + cb.Clinician.GetType().Name);
+                }
             }
         }
 
