@@ -1,46 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BirthClinicLibrary.Models;
+﻿using BirthClinicLibrary.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-
-//using Microsoft.EntityFrameworkCore.Extensions;
+//using Microsoft.EntityFrameworkCore.Diagnostics;
 
 
 namespace EFModels.Data
 {
     public class BirthDbContext : DbContext
     {
-        //public MyDbContext(DbContextOptions<MyDbContext> options) : base(options) { }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.LogTo(Console.WriteLine, new[] {RelationalEventId.CommandExecuted})
-                .EnableSensitiveDataLogging();
+            //Write SQL code to terminal:
+            //optionsBuilder.LogTo(Console.WriteLine, new[] {RelationalEventId.CommandExecuted})
+            //    .EnableSensitiveDataLogging();
             optionsBuilder.UseSqlServer(
                 @"Data Source=(localdb)\DABServer;Initial Catalog=BirthClinic;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            CreateData(modelBuilder);
+          
         }
 
-        private void CreateData(ModelBuilder mb)
-        {
-            // Births
-            /*mb.Entity<Birth>().HasData(new Birth()
-            {
-              //  BirthRoom = null,
-              //  BirthRoomReservationStart = new DateTime(2021, 5, 12, 11, 0, 0),
-             //   BirthRoomReservationEnd = new DateTime(2021, 5, 12, 16, 0, 0),
-
-            });*/
-
-            // Children
-           // mb.Entity<Child>().HasData(new Child() {ActualBirthTime = new DateTime()});
-        }
+        
 
         //Rooms:
         public DbSet<Room> Room { get; set; }
