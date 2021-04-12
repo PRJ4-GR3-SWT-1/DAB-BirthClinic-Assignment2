@@ -116,12 +116,15 @@ namespace ConsoleApplication
                     switch (key.Key)
                     {
                         case ConsoleKey.D1:
+                        case ConsoleKey.NumPad1:
                             ShowPlannedBirths(context);
                             break;
                         case ConsoleKey.D2:
+                        case ConsoleKey.NumPad2:
                             ShowAvailableRoomsAndClinicians(context);
                             break;
                         case ConsoleKey.D3:
+                        case ConsoleKey.NumPad3:
                             ShowOngoingBirths(context);
                             break;
                         case ConsoleKey.X:
