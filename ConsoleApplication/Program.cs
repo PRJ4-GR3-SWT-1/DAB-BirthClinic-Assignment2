@@ -172,6 +172,8 @@ namespace ConsoleApplication
                     Console.WriteLine("1: Vis planlagte fødsler: ");
                     Console.WriteLine("2: Ledige rum og klinikarbejdere ");
                     Console.WriteLine("3: Aktuelt pågående fødsler ");
+                    Console.WriteLine("4: Maternity rooms and resting rooms in use right now.");
+                    Console.WriteLine("F: Færdiggør reservation af rum ");
                     Console.WriteLine("x: Luk ");
                     var key=Console.ReadKey();
                     switch (key.Key)
@@ -188,8 +190,15 @@ namespace ConsoleApplication
                         case ConsoleKey.NumPad3:
                             ShowOngoingBirths(context);
                             break;
+                        case ConsoleKey.D4:
+                        case ConsoleKey.NumPad4:
+                            ShowMaternityRoomsAndRestingRoomsInUse(context);
+                            break;
                         case ConsoleKey.X:
                             running = false;
+                            break;
+                        case ConsoleKey.F:
+                            FinnishRoomReservation(context);
                             break;
                         default:
                             Console.WriteLine("Ugyldigt valg");
@@ -200,6 +209,35 @@ namespace ConsoleApplication
 
 
 
+        }
+
+        private static void FinnishRoomReservation(BirthDbContext context)
+        {
+            bool isNumber = false;
+            int id = 0;
+            while (!isNumber)
+            {
+                Console.WriteLine("Type reservation ID (x to escape)");
+                var input = Console.ReadLine();
+                if (input == "x") return;
+                isNumber = int.TryParse(input, out id);
+            }
+
+
+
+            Reservation res = context.Reservation
+                .SingleOrDefault(r => r.ReservationId == id);
+            if (res != null)
+            {
+                res.ReservationEnd = DateTime.Now;
+                context.SaveChanges();
+                Console.WriteLine("Success. Reservation is marked as finished!");
+            }
+            else
+            {
+                Console.WriteLine("Reservation not found.");
+                FinnishRoomReservation(context);
+            }
         }
 
         //Show the at current time ongoing births with information about the birth, parents, clinicians associated and the birth room.
@@ -307,7 +345,37 @@ namespace ConsoleApplication
             }
         }
 
-        //4.Show the maternity rooms and the four hours rest rooms in use withthe mother/parentsandchild/children using the room.
+        //4.Show the maternity rooms and the four hours rest rooms in use with the mother/parents and child/children using the room.
+        private static void ShowMaternityRoomsAndRestingRoomsInUse(BirthDbContext context)
+        {
+            List<Reservation> maternityRoomsAndRestingRooms =
+                context.Reservation
+                    .Where(r => r.ReservationStart < (DateTime.Now))
+                    .Where(r=>r.ReservationEnd > (DateTime.Now))
+                    .Where(r=>r.ReservedRoom is MaternityRoom || r.ReservedRoom is RestingRoom)
+                    .Include(r => r.ReservedRoom)
+                    .Include(r => r.User)
+                    .ThenInclude(m => m.Children)
+                    .ThenInclude(c => c.FamilyMembers)
+                    .ToList();
+            foreach (var reservation in maternityRoomsAndRestingRooms)
+            {
+                Console.WriteLine("Room: "
+                                  + reservation.ReservedRoom.RoomName
+                                  + " is reserved by " + reservation.User.FullName
+                                  + ".\n Name of child(ren): ");
+                foreach (var c in reservation.User.Children) 
+                {
+                    Console.WriteLine(c.FullName + ". ");
+                    foreach (var fm in c.FamilyMembers)
+                    {
+                        Console.WriteLine(". \n Familymember: " + fm.FullName + "Relation: " + fm.Relation);
+                    }
+                }
+            }
+        }
+
+
         //5.Givena birth can planneda)Show therooms reserved the birthb)Show the clinicians assigned the birth
 
         // Ekstra. Vis alle rum
