@@ -36,69 +36,7 @@ namespace ConsoleApplication
                 //context.SaveChanges();
                 SeedData sd = new SeedData(context);
 
-                List<Doctor> doctors = context.Doctor.ToList();
-                List<MidWife> midWives = context.MidWife.ToList();
 
-                Child child1 = new Child("Peter Petersen");
-                Birth birth1 = new Birth();
-                Mother mother1 = new Mother("Nikoline Petersen");
-                FamilyMember father1 = new FamilyMember("Peder Petersen", "Father");
-                context.Add(child1);
-
-                context.SaveChanges();
-                birth1.Child = child1;
-                birth1.PlannedStartTime = DateTime.Now;
-                child1.Birth = birth1;
-                child1.Mother = mother1;
-                child1.FamilyMembers = new List<FamilyMember>();
-                child1.FamilyMembers.Add(father1);
-                mother1.Children = new List<Child>();
-                mother1.Children.Add(child1);
-
-                //
-                  ClinicianBirth CB1 = new ClinicianBirth();
-                  CB1.Birth = birth1;
-                  CB1.Clinician = doctors[0];
-                  ClinicianBirth CB2 = new ClinicianBirth();
-                  CB2.Birth = birth1;
-                  CB2.Clinician = midWives[0]; 
-                   doctors[0].AssociatedBirths = new List<ClinicianBirth>();
-                   doctors[0].AssociatedBirths.Add(CB1);
-                   midWives[0].AssociatedBirths = new List<ClinicianBirth>();
-                   midWives[0].AssociatedBirths.Add(CB2); 
-                //
-                   birth1.Clinicians = new List<ClinicianBirth>();
-                   birth1.Clinicians.Add(CB1);
-                   birth1.Clinicians.Add(CB2);
-                   //
-                   Reservation res1 = new Reservation();
-                   Reservation res2 = new Reservation();
-                   Reservation res3 = new Reservation();
-                   List <BirthRoom> BRoom = context.BirthRoom.ToList();
-                   List<MaternityRoom> MRoom = context.MaternityRoom.ToList();
-                   List<RestingRoom> RRoom = context.RestingRoom.ToList();
-
-                   res1.User = mother1;
-                   res1.ReservedRoom = BRoom[0];
-                   mother1.Reservations = new List<Reservation>();
-                   BRoom[0].Reservations = new List<Reservation>();
-                   mother1.Reservations.Add(res1);
-                   BRoom[0].Reservations.Add(res1);
-
-                  res2.User = mother1;
-                  res2.ReservedRoom = MRoom[0];
-                  MRoom[0].Reservations = new List<Reservation>();
-                  mother1.Reservations.Add(res2);
-                  MRoom[0].Reservations.Add(res2);
-
-                  res3.User = mother1;
-                  res3.ReservedRoom = RRoom[0];
-                  RRoom[0].Reservations = new List<Reservation>();
-                  mother1.Reservations.Add(res3);
-                  RRoom[0].Reservations.Add(res3); 
-
-
-                context.SaveChanges(); 
 
                 //   ShowPlannedBirths(context);
 
@@ -111,6 +49,9 @@ namespace ConsoleApplication
                     Console.WriteLine("1: Vis planlagte fødsler: ");
                     Console.WriteLine("2: Ledige rum og klinikarbejdere ");
                     Console.WriteLine("3: Aktuelt pågående fødsler ");
+                    Console.WriteLine("4: Maternity rooms and resting rooms in use right now.");
+                    Console.WriteLine("F: Færdiggør reservation af rum ");
+                    Console.WriteLine("B: Lav en reservation til en fødsel");
                     Console.WriteLine("x: Luk ");
                     var key=Console.ReadKey();
                     switch (key.Key)
@@ -127,8 +68,18 @@ namespace ConsoleApplication
                         case ConsoleKey.NumPad3:
                             ShowOngoingBirths(context);
                             break;
+                        case ConsoleKey.D4:
+                        case ConsoleKey.NumPad4:
+                            ShowMaternityRoomsAndRestingRoomsInUse(context);
+                            break;
                         case ConsoleKey.X:
                             running = false;
+                            break;
+                        case ConsoleKey.F:
+                            FinnishRoomReservation(context);
+                            break;
+                        case ConsoleKey.B:
+                            AddBirth(context);
                             break;
                         default:
                             Console.WriteLine("Ugyldigt valg");
@@ -139,6 +90,35 @@ namespace ConsoleApplication
 
 
 
+        }
+
+        private static void FinnishRoomReservation(BirthDbContext context)
+        {
+            bool isNumber = false;
+            int id = 0;
+            while (!isNumber)
+            {
+                Console.WriteLine("Type reservation ID (x to escape)");
+                var input = Console.ReadLine();
+                if (input == "x") return;
+                isNumber = int.TryParse(input, out id);
+            }
+
+
+
+            Reservation res = context.Reservation
+                .SingleOrDefault(r => r.ReservationId == id);
+            if (res != null)
+            {
+                res.ReservationEnd = DateTime.Now;
+                context.SaveChanges();
+                Console.WriteLine("Success. Reservation is marked as finished!");
+            }
+            else
+            {
+                Console.WriteLine("Reservation not found.");
+                FinnishRoomReservation(context);
+            }
         }
 
         //Show the at current time ongoing births with information about the birth, parents, clinicians associated and the birth room.
@@ -246,7 +226,198 @@ namespace ConsoleApplication
             }
         }
 
-        //4.Show the maternity rooms and the four hours rest rooms in use withthe mother/parentsandchild/children using the room.
+        //4.Show the maternity rooms and the four hours rest rooms in use with the mother/parents and child/children using the room.
+        private static void ShowMaternityRoomsAndRestingRoomsInUse(BirthDbContext context)
+        {
+            List<Reservation> maternityRoomsAndRestingRooms =
+                context.Reservation
+                    .Where(r => r.ReservationStart < (DateTime.Now))
+                    .Where(r=>r.ReservationEnd > (DateTime.Now))
+                    .Where(r=>r.ReservedRoom is MaternityRoom || r.ReservedRoom is RestingRoom)
+                    .Include(r => r.ReservedRoom)
+                    .Include(r => r.User)
+                    .ThenInclude(m => m.Children)
+                    .ThenInclude(c => c.FamilyMembers)
+                    .ToList();
+            foreach (var reservation in maternityRoomsAndRestingRooms)
+            {
+                Console.WriteLine("Room: "
+                                  + reservation.ReservedRoom.RoomName
+                                  + " is reserved by " + reservation.User.FullName
+                                  + ".\n Name of child(ren): ");
+                foreach (var c in reservation.User.Children) 
+                {
+                    Console.WriteLine(c.FullName + ". ");
+                    foreach (var fm in c.FamilyMembers)
+                    {
+                        Console.WriteLine(". \n Familymember: " + fm.FullName + "Relation: " + fm.Relation);
+                    }
+                }
+            }
+        }
+
+
+        
+
+        // Ekstra. Vis alle rum
+        private static void ShowAvailableRooms(BirthDbContext context, DateTime startTime, Room RoomType)
+        {
+            
+            // Show clinicians, birth room and available at the clinic for the next five days
+            List<Room> rooms =
+                context.Room
+                    .Include(r => r.Reservations)
+                    //.Where(r=>r.Reservations.ReservationStart>DateTime.Now+TimeSpan.FromDays(5))
+                    .Where(r => r is BirthRoom )
+                    .ToList();
+            //print available rooms:
+            Console.WriteLine("Ledige Rum:");
+
+            foreach (var room in rooms)
+            {
+                bool booked = false;
+                foreach (var reservation in room.Reservations)
+                {
+
+                    if (reservation.ReservationStart < startTime+TimeSpan.FromHours(5) && reservation.ReservationEnd > startTime) 
+                    //Remove room from list
+                    {
+                        booked = true;
+                        break;
+                    }
+                }
+                if (!booked) Console.WriteLine(room.RoomId + ": " + room.GetType().Name + " " + room.RoomName);
+            }
+        }
+
+        public static void AddBirth(BirthDbContext context)
+        {
+            // Til når brugeren skal vælge doctor og midwife.
+            List<Doctor> doctors = context.Doctor.ToList();
+            List<MidWife> midWives = context.MidWife.ToList();
+
+            Console.WriteLine("Velkommen til reservation af fødsel");
+            Console.WriteLine("-----------------------------------");
+
+            Console.WriteLine("Hvad er navnet på barnet");
+            string childName = Console.ReadLine();
+
+            Console.WriteLine("Hvad er navnet på moderen til barnet");
+            string motherName = Console.ReadLine();
+
+            Console.WriteLine("Hvad er navnet på faderen til barnet");
+            string fatherName = Console.ReadLine();
+
+            Console.WriteLine("Hvilken dato vil du have reservationen til. Skriv på formen DD/MM/ÅÅÅÅ");
+            string dato = Console.ReadLine();
+            string[] datoOpsplittet = dato.Split("/");
+            int dag = int.Parse(datoOpsplittet[0]);
+            int måned = int.Parse(datoOpsplittet[1]);
+            int år = int.Parse(datoOpsplittet[2]);
+
+            Console.WriteLine("Hvilken tid vil du have reservationen. Skriv på formen TT.MM");
+            string tid = Console.ReadLine();
+            string[] tidOpsplittet = tid.Split(".");
+            int time = int.Parse(tidOpsplittet[0]);
+            int minut = int.Parse(tidOpsplittet[1]);
+
+            Console.WriteLine("Hvilken jordmor vil du gerne have? Indtast tallet ud fra personen");
+            int counter = 0;
+            foreach (MidWife mW in midWives)
+            {
+                Console.WriteLine(counter + ". " + mW.FullName);
+                counter++;
+            }
+
+            int valgtMidwife = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Hvilken doktor vil du gerne have? Indtast tallet ud fra personen");
+            counter = 0;
+            foreach (Doctor dc in doctors)
+            {
+                Console.WriteLine(counter + ". " + dc.FullName);
+                counter++;
+            }
+
+            int valgtDoctor = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Du skal også have et fødselsrum reserveret, Vi finder ledige rum for dagen. \n Indtast tallet ud fra rummet");
+            ShowAvailableRooms(context, new DateTime(år, måned, dag, time, minut, 00), new BirthRoom(""));
+            int valgtRumId = int.Parse(Console.ReadLine());
+
+            Room chosenBirthRoom = context.Room.SingleOrDefault(r => r.RoomId == valgtRumId);
+
+
+            Console.WriteLine("Tak for dit info, vores super database vil nu oprette reservationen for dig");
+
+
+            Child child1 = new Child(childName);
+            Birth birth1 = new Birth();
+            Mother mother1 = new Mother(motherName);
+            FamilyMember father1 = new FamilyMember(fatherName, "Father");
+            context.Add(child1);
+
+            context.SaveChanges();
+            birth1.Child = child1;
+            DateTime PST = new DateTime(år, måned, dag, time, minut, 00);
+            birth1.PlannedStartTime = PST;
+            child1.Birth = birth1;
+            child1.Mother = mother1;
+            child1.FamilyMembers = new List<FamilyMember>();
+            child1.FamilyMembers.Add(father1);
+            mother1.Children = new List<Child>();
+            mother1.Children.Add(child1);
+
+            //
+            ClinicianBirth CB1 = new ClinicianBirth();
+            CB1.Birth = birth1;
+            CB1.Clinician = doctors[valgtDoctor];
+            ClinicianBirth CB2 = new ClinicianBirth();
+            CB2.Birth = birth1;
+            CB2.Clinician = midWives[valgtMidwife];
+            doctors[valgtDoctor].AssociatedBirths = new List<ClinicianBirth>();
+            doctors[valgtDoctor].AssociatedBirths.Add(CB1);
+            midWives[valgtMidwife].AssociatedBirths = new List<ClinicianBirth>();
+            midWives[valgtMidwife].AssociatedBirths.Add(CB2);
+            //
+            birth1.Clinicians = new List<ClinicianBirth>();
+            birth1.Clinicians.Add(CB1);
+            birth1.Clinicians.Add(CB2);
+            //
+
+
+
+            Reservation res1 = new Reservation();
+            res1.ReservationStart = new DateTime(år, måned, dag, time, minut, 00);
+            res1.ReservationEnd = res1.ReservationStart + TimeSpan.FromHours(5);
+            res1.User = mother1;
+            res1.ReservedRoom = chosenBirthRoom;
+            mother1.Reservations = new List<Reservation>();
+            chosenBirthRoom.Reservations = new List<Reservation>();
+            mother1.Reservations.Add(res1);
+            chosenBirthRoom.Reservations.Add(res1);
+
+            /*     Reservation res2 = new Reservation();
+ Reservation res3 = new Reservation();
+ List <BirthRoom> BRoom = context.BirthRoom.ToList();
+ List<MaternityRoom> MRoom = context.MaternityRoom.ToList();
+ List<RestingRoom> RRoom = context.RestingRoom.ToList();*/
+
+            /*  res2.User = mother1;
+              res2.ReservedRoom = MRoom[0];
+              MRoom[0].Reservations = new List<Reservation>();
+              mother1.Reservations.Add(res2);
+              MRoom[0].Reservations.Add(res2);
+
+              res3.User = mother1;
+              res3.ReservedRoom = RRoom[0];
+              RRoom[0].Reservations = new List<Reservation>();
+              mother1.Reservations.Add(res3);
+              RRoom[0].Reservations.Add(res3); */
+
+
+            context.SaveChanges();
+        }
         //5.Givena birth can planneda)Show therooms reserved the birthb)Show the clinicians assigned the birth
         private static void ShowRoomsAndClinicianReservedForBirth(BirthDbContext context)
         {
@@ -278,4 +449,7 @@ namespace ConsoleApplication
 
         }
     }
+
+
+    
 }
