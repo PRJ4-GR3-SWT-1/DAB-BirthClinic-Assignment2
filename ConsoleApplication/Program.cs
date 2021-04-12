@@ -30,6 +30,7 @@ namespace ConsoleApplication
                     Console.WriteLine("2: Ledige rum og klinikarbejdere ");
                     Console.WriteLine("3: Aktuelt pågående fødsler ");
                     Console.WriteLine("4: Maternity rooms and resting rooms in use right now.");
+                    Console.WriteLine("5: Vis reserverede rum og associeret personale til specifik fødsel");
                     Console.WriteLine("F: Færdiggør reservation af rum ");
                     Console.WriteLine("B: Lav en reservation til en fødsel");
                     Console.WriteLine("A: Annuller reservation af rum ");
@@ -62,6 +63,10 @@ namespace ConsoleApplication
                 case ConsoleKey.D4:
                 case ConsoleKey.NumPad4:
                     ShowMaternityRoomsAndRestingRoomsInUse(context);
+                    break;
+                case ConsoleKey.D5:
+                case ConsoleKey.NumPad5:
+                    ShowRoomsAndClinicianReservedForBirth(context);
                     break;
                 case ConsoleKey.X:
                     _running = false;
@@ -219,7 +224,7 @@ namespace ConsoleApplication
             //Show planned births for the coming three days
             List<Birth> plannedBirths =
                 context.Birth
-                    .Where(b => b.PlannedStartTime < (DateTime.Now/*+new TimeSpan(3,0,0,0)*/))
+                    .Where(b => b.PlannedStartTime < (DateTime.Now.AddDays(3)))
                     .Where(b=>b.PlannedStartTime > (DateTime.Now))
                     .Include(b=>b.Child)
                     .Include(b=>b.Clinicians)
@@ -228,11 +233,12 @@ namespace ConsoleApplication
             Console.WriteLine("Planned births next 3 days:");
             foreach (var birth in plannedBirths)
             {
-                Console.WriteLine("BirthID: " +birth.BirthId+"Planned starttime: "+ birth.PlannedStartTime+ "Name: "+ birth.Child.FullName);
-                Console.WriteLine(" Associated Clinicians:");
+                Console.WriteLine("BirthID: " +birth.BirthId+"\nPlanned starttime: "
+                                  + birth.PlannedStartTime+ "\nName: "+ birth.Child.FullName);
+                Console.WriteLine("Associated Clinicians: ");
                 foreach (var cb in birth.Clinicians)
                 {
-                    Console.WriteLine("   " + cb.Clinician.FullName + " " + cb.Clinician.GetType().Name);
+                    Console.WriteLine("   " + cb.Clinician.FullName + " (" + cb.Clinician.GetType().Name + ")");
                 }
             }
         }
@@ -372,7 +378,7 @@ namespace ConsoleApplication
             birth1.Child = child1;
             DateTime PST = new DateTime(år, måned, dag, time, minut, 00);
             birth1.PlannedStartTime = PST;
-            child1.Birth = birth1;
+           //child1.Birth = birth1;
             child1.Mother = mother1;
             child1.FamilyMembers = new List<FamilyMember>();
             child1.FamilyMembers.Add(father1);
@@ -429,20 +435,24 @@ namespace ConsoleApplication
 
             context.SaveChanges();
         }
-        //5.Givena birth can planneda)Show therooms reserved the birthb)Show the clinicians assigned the birth
+        //5.Given a birth can planned
+        //a)Show the rooms reserved the birth
+        //b)Show the clinicians assigned the birth
         private static void ShowRoomsAndClinicianReservedForBirth(BirthDbContext context)
         {
             Console.WriteLine("Which BirthID are you searching for?");
             var input = Console.ReadLine();
             var inputId = int.Parse(input);
+            
             Birth birth =
                 context.Birth
                     
-                    .Include(b => b.Child as Child)
+                    .Include(b => b.Child)
                     .ThenInclude(c => c.Mother)
                     .ThenInclude(m => m.Reservations)
                     .ThenInclude(r => r.ReservedRoom)
                     .Include(b => b.Clinicians)
+                    .ThenInclude(b=>b.Clinician)
                     .SingleOrDefault(b => b.BirthId == inputId);
 
             Console.WriteLine("BirthID: " + birth.BirthId + "Associated Clinicians: ");
@@ -452,7 +462,7 @@ namespace ConsoleApplication
                 }
 
             Console.WriteLine("Reserved Rooms: ");
-                Child c = birth.Child as Child;
+                Child c = birth.Child;
                 foreach (var r in c.Mother.Reservations)
                 {
                     Console.WriteLine(" "+r.ReservedRoom.RoomName);
