@@ -167,6 +167,7 @@ namespace ConsoleApplication
                     Console.WriteLine("1: Vis planlagte fødsler: ");
                     Console.WriteLine("2: Ledige rum og klinikarbejdere ");
                     Console.WriteLine("3: Aktuelt pågående fødsler ");
+                    Console.WriteLine("4: Maternity rooms and resting rooms in use right now.");
                     Console.WriteLine("F: Færdiggør reservation af rum ");
                     Console.WriteLine("x: Luk ");
                     var key=Console.ReadKey();
@@ -183,6 +184,10 @@ namespace ConsoleApplication
                         case ConsoleKey.D3:
                         case ConsoleKey.NumPad3:
                             ShowOngoingBirths(context);
+                            break;
+                        case ConsoleKey.D4:
+                        case ConsoleKey.NumPad4:
+                            ShowMaternityRoomsAndRestingRoomsInUse(context);
                             break;
                         case ConsoleKey.X:
                             running = false;
