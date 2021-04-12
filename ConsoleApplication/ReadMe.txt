@@ -20,6 +20,8 @@
 		- Her kan vælge at afslutte sin rum-reservation ved at indtaste reservations id.
 	B: Lav en reservation til fødsel
 		- Man kan oprette en ny fødsels reservation, hvilket kræver barnets (midlertidige) navn, navn på moderen og tidspunktet for fødslen.
+		- Ved valg af personale og rum SKAL man vælge en af de viste muligheder.
+		- Indtastning af dato og tidspunkt skal overholde de skrevne anvisninger. 
 	A: Annuller reservation af rum
 		- Man kan annullere en reservation af rum ved at indtaste reservations id.
 4. Til sidst kan man afslutte programmet ved at trykke "x".
