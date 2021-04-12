@@ -36,18 +36,70 @@ namespace ConsoleApplication
                 //context.SaveChanges();
                 SeedData sd = new SeedData(context);
 
+                // Til når brugeren skal vælge doctor og midwife.
                 List<Doctor> doctors = context.Doctor.ToList();
                 List<MidWife> midWives = context.MidWife.ToList();
 
-                Child child1 = new Child("Peter Petersen");
+                Console.WriteLine("Velkommen til reservation af fødsel");
+                Console.WriteLine("-----------------------------------");
+
+                Console.WriteLine("Hvad er navnet på barnet");
+                string childName = Console.ReadLine();
+
+                Console.WriteLine("Hvad er navnet på moderen til barnet");
+                string motherName = Console.ReadLine();
+
+                Console.WriteLine("Hvad er navnet på faderen til barnet");
+                string fatherName = Console.ReadLine();
+
+                Console.WriteLine("Hvilken dato vil du have reservationen til. Skriv på formen DD/MM/ÅÅÅÅ");
+                string dato = Console.ReadLine();
+                string[] datoOpsplittet = dato.Split("/");
+                int dag = int.Parse(datoOpsplittet[0]);
+                int måned = int.Parse(datoOpsplittet[1]);
+                int år = int.Parse(datoOpsplittet[2]);
+
+                Console.WriteLine("Hvilken tid vil du have reservationen. Skriv på formen TT.MM");
+                string tid = Console.ReadLine();
+                string[] tidOpsplittet = tid.Split(".");
+                int time = int.Parse(tidOpsplittet[0]);
+                int minut = int.Parse(tidOpsplittet[1]);
+
+                Console.WriteLine("Hvilken jordmor vil du gerne have? Indtast tallet ud fra personen");
+                int counter = 0;
+                foreach (MidWife mW in midWives)
+                {
+                    Console.WriteLine(counter + ". " + mW.FullName);
+                    counter++;
+                }
+
+                int valgtMidwife = int.Parse(Console.ReadLine());
+
+                Console.WriteLine("Hvilken doktor vil du gerne have? Indtast tallet ud fra personen");
+                counter = 0;
+                foreach (Doctor dc in doctors)
+                {
+                    Console.WriteLine(counter + ". " + dc.FullName);
+                    counter++;
+                }
+
+                int valgtDoctor = int.Parse(Console.ReadLine());
+
+                Console.WriteLine("Du skal også have et fødselsrum reserveret, Vi finder ledige rum for dagen. \n Indtast tallet ud fra rummet");
+
+
+                Console.WriteLine("Tak for dit info, vores super database vil nu oprette reservationen for dig");
+
+                Child child1 = new Child(childName);
                 Birth birth1 = new Birth();
-                Mother mother1 = new Mother("Nikoline Petersen");
-                FamilyMember father1 = new FamilyMember("Peder Petersen", "Father");
+                Mother mother1 = new Mother(motherName);
+                FamilyMember father1 = new FamilyMember(fatherName, "Father");
                 context.Add(child1);
 
                 context.SaveChanges();
                 birth1.Child = child1;
-                birth1.PlannedStartTime = DateTime.Now;
+                DateTime PST = new DateTime(år, måned, dag, time, minut,00);
+                birth1.PlannedStartTime = PST;
                 child1.Birth = birth1;
                 child1.Mother = mother1;
                 child1.FamilyMembers = new List<FamilyMember>();
@@ -58,20 +110,24 @@ namespace ConsoleApplication
                 //
                   ClinicianBirth CB1 = new ClinicianBirth();
                   CB1.Birth = birth1;
-                  CB1.Clinician = doctors[0];
+                  CB1.Clinician = doctors[valgtDoctor];
                   ClinicianBirth CB2 = new ClinicianBirth();
                   CB2.Birth = birth1;
-                  CB2.Clinician = midWives[0]; 
-                   doctors[0].AssociatedBirths = new List<ClinicianBirth>();
-                   doctors[0].AssociatedBirths.Add(CB1);
-                   midWives[0].AssociatedBirths = new List<ClinicianBirth>();
-                   midWives[0].AssociatedBirths.Add(CB2); 
+                  CB2.Clinician = midWives[valgtMidwife]; 
+                   doctors[valgtDoctor].AssociatedBirths = new List<ClinicianBirth>();
+                   doctors[valgtDoctor].AssociatedBirths.Add(CB1);
+                   midWives[valgtMidwife].AssociatedBirths = new List<ClinicianBirth>();
+                   midWives[valgtMidwife].AssociatedBirths.Add(CB2); 
                 //
                    birth1.Clinicians = new List<ClinicianBirth>();
                    birth1.Clinicians.Add(CB1);
                    birth1.Clinicians.Add(CB2);
                    //
-                   Reservation res1 = new Reservation();
+
+
+
+
+              /*     Reservation res1 = new Reservation();
                    Reservation res2 = new Reservation();
                    Reservation res3 = new Reservation();
                    List <BirthRoom> BRoom = context.BirthRoom.ToList();
@@ -95,7 +151,7 @@ namespace ConsoleApplication
                   res3.ReservedRoom = RRoom[0];
                   RRoom[0].Reservations = new List<Reservation>();
                   mother1.Reservations.Add(res3);
-                  RRoom[0].Reservations.Add(res3); 
+                  RRoom[0].Reservations.Add(res3); */
 
 
                 context.SaveChanges(); 
@@ -262,7 +318,7 @@ namespace ConsoleApplication
             //Show planned births for the coming three days
             List<Birth> plannedBirths =
                 context.Birth
-                    .Where(b => b.PlannedStartTime < (DateTime.Now/*+new TimeSpan(3,0,0,0)*/))
+                    .Where(b => b.PlannedStartTime < (DateTime.Now+new TimeSpan(3,0,0,0)) && (b.PlannedStartTime > (DateTime.Now)))
                     .Include(b=>b.Child)
                     .Include(b=>b.Clinicians)
                     .ThenInclude(cb=>cb.Clinician)

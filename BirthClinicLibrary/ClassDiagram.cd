@@ -3,7 +3,7 @@
   <Class Name="BirthClinicLibrary.Models.Birth">
     <Position X="8.25" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAAAACAAAAAAAAEAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAACAAAACAAAAAAAAEAAAAA=</HashCode>
       <FileName>Models\Birth.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -16,8 +16,17 @@
   </Class>
   <Class Name="BirthClinicLibrary.Models.Child">
     <Position X="7.25" Y="4" Width="1.5" />
+    <InheritanceLine Type="BirthClinicLibrary.Models.Person" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="7" Y="3.75" />
+        <Point X="7.247" Y="3.75" />
+        <Point X="7.247" Y="3.757" />
+        <Point X="7.75" Y="3.757" />
+        <Point X="7.75" Y="4" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAACAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAgAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAQAAAA=</HashCode>
       <FileName>Models\Person.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -30,6 +39,14 @@
   </Class>
   <Class Name="BirthClinicLibrary.Models.Secretary" Collapsed="true">
     <Position X="2.75" Y="4" Width="1.5" />
+    <InheritanceLine Type="BirthClinicLibrary.Models.Person" ManuallyRouted="true">
+      <Path>
+        <Point X="5.5" Y="3.124" />
+        <Point X="4.368" Y="3.124" />
+        <Point X="4.368" Y="4.346" />
+        <Point X="4.25" Y="4.346" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Person.cs</FileName>
@@ -38,7 +55,7 @@
   <Class Name="BirthClinicLibrary.Models.Mother">
     <Position X="5" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAEAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Person.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -99,9 +116,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="BirthClinicLibrary.Models.Reservation">
-    <Position X="10" Y="1.25" Width="1.5" />
+    <Position X="10.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAJAAAAAAAAAAAAAACAAA=</HashCode>
+      <HashCode>AAABAAAAAAABAAAAAAAAAAAAJAAAAAAAAAAAAAACAAA=</HashCode>
       <FileName>Models\Reservation.cs</FileName>
     </TypeIdentifier>
   </Class>
