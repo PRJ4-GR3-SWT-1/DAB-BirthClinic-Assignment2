@@ -24,4 +24,5 @@
 		- Man kan annullere en reservation af rum ved at indtaste reservations id.
 4. Til sidst kan man afslutte programmet ved at trykke "x".
 
+************************** OBS ***********************
 Bemærk at der kan læses nærmere om systemrelevante beslutninger og antagelser i .txt-filen "Decisions and Assumptions".
