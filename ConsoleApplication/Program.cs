@@ -260,16 +260,36 @@ namespace ConsoleApplication
         //5.Givena birth can planneda)Show therooms reserved the birthb)Show the clinicians assigned the birth
 
         // Ekstra. Vis alle rum
-        private static void ShowAvailableRooms(BirthDbContext context, DateTime startTime, Room RoomType)
+        private static void ShowAvailableRooms(BirthDbContext context, DateTime startTime, string roomType ="birthroom")
         {
-            
-            // Show clinicians, birth room and available at the clinic for the next five days
-            List<Room> rooms =
-                context.Room
-                    .Include(r => r.Reservations)
-                    //.Where(r=>r.Reservations.ReservationStart>DateTime.Now+TimeSpan.FromDays(5))
-                    .Where(r => r is BirthRoom )
-                    .ToList();
+            roomType = roomType.ToLower();
+            List<Room> rooms = null;
+
+            switch (roomType)
+            {
+                case "birthroom":
+                    rooms = context.Room
+                        .Include(r => r.Reservations)
+                        //.Where(r=>r.Reservations.ReservationStart>DateTime.Now+TimeSpan.FromDays(5))
+                        .Where(r => r is BirthRoom)
+                        .ToList();
+                    break;
+                case "maternityroom":
+                    rooms = context.Room
+                        .Include(r => r.Reservations)
+                        //.Where(r=>r.Reservations.ReservationStart>DateTime.Now+TimeSpan.FromDays(5))
+                        .Where(r => r is MaternityRoom)
+                        .ToList();
+                    break;
+                case "restingroom":
+                    rooms = context.Room
+                        .Include(r => r.Reservations)
+                        //.Where(r=>r.Reservations.ReservationStart>DateTime.Now+TimeSpan.FromDays(5))
+                        .Where(r => r is RestingRoom)
+                        .ToList();
+                    break;
+            }
+
             //print available rooms:
             Console.WriteLine("Ledige Rum:");
 
@@ -342,22 +362,42 @@ namespace ConsoleApplication
             int valgtDoctor = int.Parse(Console.ReadLine());
 
             Console.WriteLine("Du skal også have et fødselsrum reserveret, Vi finder ledige rum for dagen. \n Indtast tallet ud fra rummet");
-            ShowAvailableRooms(context, new DateTime(år, måned, dag, time, minut, 00), new BirthRoom(""));
+            ShowAvailableRooms(context, new DateTime(år, måned, dag, time, minut, 00), "birthroom");
             int valgtRumId = int.Parse(Console.ReadLine());
-
             Room chosenBirthRoom = context.Room.SingleOrDefault(r => r.RoomId == valgtRumId);
 
+            Console.WriteLine("Vil du også reservere et Maternityroom y/n");
+            Room chosenMaternityRoom = null;
+            if (Console.ReadLine().ToLower() == "y")
+            {
+                Console.WriteLine("MaternityRoom reservation \n Indtast tallet ud fra rummet");
+                ShowAvailableRooms(context, new DateTime(år, måned, dag, time, minut, 00), "maternityroom");
+                valgtRumId = int.Parse(Console.ReadLine());
+                chosenMaternityRoom = context.Room.SingleOrDefault(r => r.RoomId == valgtRumId);
+            }
+            Console.WriteLine("Vil du også reservere et restingroom y/n");
+            Room chosenRestingRoom = null;
+            if (Console.ReadLine().ToLower() == "y")
+            {
+                Console.WriteLine("RestingRoom reservation \n Indtast tallet ud fra rummet");
+                ShowAvailableRooms(context, new DateTime(år, måned, dag, time, minut, 00), "restingroom");
+                valgtRumId = int.Parse(Console.ReadLine());
+                chosenRestingRoom = context.Room.SingleOrDefault(r => r.RoomId == valgtRumId);
+            }
 
             Console.WriteLine("Tak for dit info, vores super database vil nu oprette reservationen for dig");
 
-
+            // Følgende kode opsætter de rigtige referencer m.m. Så dataen kan gemmes på databasen
+            // Her oprettes de forskellige klasser
             Child child1 = new Child(childName);
             Birth birth1 = new Birth();
             Mother mother1 = new Mother(motherName);
             FamilyMember father1 = new FamilyMember(fatherName, "Father");
+            // Savechanges skal kaldes allerede nu, da child skal laves før birth ellers så kan EF core ikke finde ud af hvilken den skal lave først.
             context.Add(child1);
-
             context.SaveChanges();
+
+            // Her sættes referencer
             birth1.Child = child1;
             DateTime PST = new DateTime(år, måned, dag, time, minut, 00);
             birth1.PlannedStartTime = PST;
@@ -368,7 +408,7 @@ namespace ConsoleApplication
             mother1.Children = new List<Child>();
             mother1.Children.Add(child1);
 
-            //
+            // Her sættes clinicians og deres births
             ClinicianBirth CB1 = new ClinicianBirth();
             CB1.Birth = birth1;
             CB1.Clinician = doctors[valgtDoctor];
@@ -379,14 +419,14 @@ namespace ConsoleApplication
             doctors[valgtDoctor].AssociatedBirths.Add(CB1);
             midWives[valgtMidwife].AssociatedBirths = new List<ClinicianBirth>();
             midWives[valgtMidwife].AssociatedBirths.Add(CB2);
-            //
+            // Her sættes clinicians på selve birth
             birth1.Clinicians = new List<ClinicianBirth>();
             birth1.Clinicians.Add(CB1);
             birth1.Clinicians.Add(CB2);
             //
 
 
-
+            // Her sættes reservationerne for alle rum.
             Reservation res1 = new Reservation();
             res1.ReservationStart = new DateTime(år, måned, dag, time, minut, 00);
             res1.ReservationEnd = res1.ReservationStart + TimeSpan.FromHours(5);
@@ -397,26 +437,33 @@ namespace ConsoleApplication
             mother1.Reservations.Add(res1);
             chosenBirthRoom.Reservations.Add(res1);
 
-            /*     Reservation res2 = new Reservation();
- Reservation res3 = new Reservation();
- List <BirthRoom> BRoom = context.BirthRoom.ToList();
- List<MaternityRoom> MRoom = context.MaternityRoom.ToList();
- List<RestingRoom> RRoom = context.RestingRoom.ToList();*/
+            Reservation res2 = new Reservation();
+            if (chosenMaternityRoom != null)
+            {
+                res2.ReservationStart = new DateTime(år, måned, dag, time, minut, 00);
+                res2.ReservationEnd = res2.ReservationStart + TimeSpan.FromDays(5);
+                res2.User = mother1;
+                res2.ReservedRoom = chosenMaternityRoom;
+                chosenMaternityRoom.Reservations = new List<Reservation>();
+                mother1.Reservations.Add(res2);
+                chosenMaternityRoom.Reservations.Add(res2);
+            }
 
-            /*  res2.User = mother1;
-              res2.ReservedRoom = MRoom[0];
-              MRoom[0].Reservations = new List<Reservation>();
-              mother1.Reservations.Add(res2);
-              MRoom[0].Reservations.Add(res2);
-
-              res3.User = mother1;
-              res3.ReservedRoom = RRoom[0];
-              RRoom[0].Reservations = new List<Reservation>();
-              mother1.Reservations.Add(res3);
-              RRoom[0].Reservations.Add(res3); */
-
-
+            Reservation res3 = new Reservation();
+            if (chosenRestingRoom != null)
+            {
+                res3.ReservationStart = new DateTime(år, måned, dag, time, minut, 00)+TimeSpan.FromHours(5);
+                res3.ReservationEnd = res3.ReservationStart + TimeSpan.FromHours(4);
+                res3.User = mother1;
+                res3.ReservedRoom = chosenRestingRoom;
+                chosenRestingRoom.Reservations = new List<Reservation>();
+                mother1.Reservations.Add(res3);
+                chosenRestingRoom.Reservations.Add(res3);
+            }
+            // Alt gemmes og reservationen er gemmenført
             context.SaveChanges();
+
+            Console.WriteLine($"Reservation til den {dato}, med personerne {childName}, {motherName} og {fatherName} er gennemført og gemt");
         }
     }
 
