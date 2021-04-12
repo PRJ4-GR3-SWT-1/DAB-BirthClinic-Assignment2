@@ -1,9 +1,8 @@
 ﻿This README file will explain (in Danish) how to use the system.
 
-1. Der skal på computeren oprettes en local MSQL database server med navnet "DABServer" og herefter en database der hedder "BirthClinic". 
-2. MÅSKE: Herefter køres Update-Database i VS-Package-Manager-Console. 
-3. Herefter kan programmet køres.
-4. Der er en menu tilgængelig. Man kan vælge mellem 5 forskellige cases: 
+1. Der skal på computeren oprettes en local MSQL database server med navnet "DABServer". Programmet sørger selv for at oprette en database der hedder "BirthClinic". 
+2. Herefter kan programmet køres.
+3. Der er en menu tilgængelig. Man kan vælge mellem 5 forskellige cases: 
 	1. Vis planlagte fødsler.
 		- Viser planlagte fødsler de kommende 3 dage - inklusiv BirthID, planlagt starttidspunkt, navn på barnet og associerede 
 		  klinisk personale.
@@ -23,9 +22,6 @@
 		- Man kan oprette en ny fødsels reservation, hvilket kræver barnets (midlertidige) navn, navn på moderen og tidspunktet for fødslen.
 	A: Annuller reservation af rum
 		- Man kan annullere en reservation af rum ved at indtaste reservations id.
-5. Til sidst kan man afslutte programmet ved at trykke "x".
-
-
-
+4. Til sidst kan man afslutte programmet ved at trykke "x".
 
 Bemærk at der kan læses nærmere om systemrelevante beslutninger og antagelser i .txt-filen "Decisions and Assumptions".
