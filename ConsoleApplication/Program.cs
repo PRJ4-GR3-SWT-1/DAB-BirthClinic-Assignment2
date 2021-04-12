@@ -487,7 +487,7 @@ namespace ConsoleApplication
         //b)Show the clinicians assigned the birth
         private static void ShowRoomsAndClinicianReservedForBirth(BirthDbContext context)
         {
-            Console.WriteLine("Which BirthID are you searching for?");
+            Console.WriteLine("Hvilket BirthID søger du efter?");
             var input = Console.ReadLine();
             var inputId = int.Parse(input);
             
@@ -502,13 +502,13 @@ namespace ConsoleApplication
                     .ThenInclude(b=>b.Clinician)
                     .SingleOrDefault(b => b.BirthId == inputId);
 
-            Console.WriteLine("BirthID: " + birth.BirthId + "Associated Clinicians: ");
+            Console.WriteLine("BirthID: " + birth.BirthId + "Associeret personale: ");
                 foreach (var cb in birth.Clinicians)
                 {
                     Console.WriteLine("   " + cb.Clinician.FullName + " " + cb.Clinician.GetType().Name);
                 }
 
-            Console.WriteLine("Reserved Rooms: ");
+            Console.WriteLine("Reserverede rum: ");
                 Child c = birth.Child;
                 foreach (var r in c.Mother.Reservations)
                 {
