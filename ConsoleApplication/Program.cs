@@ -16,7 +16,7 @@ namespace ConsoleApplication
         private static bool _running = true;
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to the BirthClinic Database access system :D");
+            Console.WriteLine("Velkommen til BirthClinic Database access system :D");
 
             using (var context = new BirthDbContext())
             {
@@ -92,11 +92,11 @@ namespace ConsoleApplication
             var res = context.Reservation.Single(r => r.ReservationId == id);
             if (res != null)
             {
-                Console.WriteLine("Reservation found. Removing now");
+                Console.WriteLine("Reservation fundet. Fjernes nu");
                 context.Remove<Reservation>(res);
                 context.SaveChanges();
             }
-            else Console.WriteLine("Could not find reservation. Nothing is canceled");
+            else Console.WriteLine("Kunne ikke finde reservation. Intet er fjernet.");
             
         }
 
@@ -113,11 +113,11 @@ namespace ConsoleApplication
             {
                 res.ReservationEnd = DateTime.Now;
                 context.SaveChanges();
-                Console.WriteLine("Success. Reservation is marked as finished!");
+                Console.WriteLine("Succes. Reservationen er nu markeret som 'færdig'!");
             }
             else
             {
-                Console.WriteLine("Reservation not found.");
+                Console.WriteLine("Reservation ikke fundet.");
                 FinnishRoomReservation(context);
             }
         }
@@ -128,7 +128,7 @@ namespace ConsoleApplication
             int id =0;
             while (!isNumber)
             {
-                Console.WriteLine("Type reservation ID (x to escape)");
+                Console.WriteLine("Skriv reservation ID (x for at afslutte)");
                 var input = Console.ReadLine();
                 if (input == "x") return 0;
                 isNumber = int.TryParse(input, out id);
@@ -149,13 +149,13 @@ namespace ConsoleApplication
                     .ThenInclude(u=>u.Children)
                     .ThenInclude(c=>c.FamilyMembers)
                     .ToList();
-            Console.WriteLine("Current BirthRoom uses:");
+            Console.WriteLine("Nuværende føderum i brug:");
             foreach (Reservation res in reservations)
             {
                 Console.WriteLine(res.ReservedRoom.RoomName);
                 foreach (var child in res.User.Children)
                 {
-                    Console.WriteLine(" Child name: "+ child.FullName + " Mother: "+child.Mother.FullName + " Family:");
+                    Console.WriteLine(" Barnets navn: "+ child.FullName + " Morens navn: "+child.Mother.FullName + " Familie:");
                     foreach (var member in child.FamilyMembers)
                     {
                         Console.WriteLine("  "+member.Relation+": "+member.FullName);
@@ -165,7 +165,7 @@ namespace ConsoleApplication
                         .Include(b => b.Clinicians)
                         .ThenInclude(c => c.Clinician)
                         .Single(b => b.Child.PersonId == child.PersonId);
-                    Console.WriteLine(" Associated Clinicians:");
+                    Console.WriteLine(" Associeret personale:");
                     foreach (var cb in birth.Clinicians)
                     {
                         Console.WriteLine("  "+cb.Clinician.GetType().Name + ": " + cb.Clinician.FullName);
@@ -250,12 +250,12 @@ namespace ConsoleApplication
                     .Include(b=>b.Clinicians)
                     .ThenInclude(cb=>cb.Clinician)
                     .ToList();
-            Console.WriteLine("Planned births next 3 days:");
+            Console.WriteLine("Planlagte fødsler de kommende 3 dage:");
             foreach (var birth in plannedBirths)
             {
-                Console.WriteLine("BirthID: " +birth.BirthId+"\nPlanned starttime: "
-                                  + birth.PlannedStartTime+ "\nName: "+ birth.Child.FullName);
-                Console.WriteLine("Associated Clinicians: ");
+                Console.WriteLine("Fødsels ID: " +birth.BirthId+"\nPlanlagt starttidspunkt: "
+                                  + birth.PlannedStartTime+ "\nNavn: "+ birth.Child.FullName);
+                Console.WriteLine("Associeret personale: ");
                 foreach (var cb in birth.Clinicians)
                 {
                     Console.WriteLine("   " + cb.Clinician.FullName + " (" + cb.Clinician.GetType().Name + ")");
@@ -278,16 +278,16 @@ namespace ConsoleApplication
                     .ToList();
             foreach (var reservation in maternityRoomsAndRestingRooms)
             {
-                Console.WriteLine("Room: "
+                Console.WriteLine("Rummet: "
                                   + reservation.ReservedRoom.RoomName
-                                  + " is reserved by " + reservation.User.FullName
-                                  + ".\n Name of child(ren): ");
+                                  + " er reserveret af " + reservation.User.FullName
+                                  + ".\n Navn på børn: ");
                 foreach (var c in reservation.User.Children) 
                 {
                     Console.WriteLine(c.FullName + ". ");
                     foreach (var fm in c.FamilyMembers)
                     {
-                        Console.WriteLine(". \n Familymember: " + fm.FullName + "Relation: " + fm.Relation);
+                        Console.WriteLine(". \n Familiemedlem: " + fm.FullName + "Relation: " + fm.Relation);
                     }
                 }
             }
@@ -522,7 +522,7 @@ namespace ConsoleApplication
                     .ThenInclude(b=>b.Clinician)
                     .SingleOrDefault(b => b.BirthId == inputId);
 
-            Console.WriteLine("BirthID: " + birth.BirthId + "Associeret personale: ");
+            Console.WriteLine("Fødsels ID: " + birth.BirthId + "Associeret personale: ");
                 foreach (var cb in birth.Clinicians)
                 {
                     Console.WriteLine("   " + cb.Clinician.FullName + " " + cb.Clinician.GetType().Name);
