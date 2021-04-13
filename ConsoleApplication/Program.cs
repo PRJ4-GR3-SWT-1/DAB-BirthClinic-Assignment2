@@ -281,7 +281,7 @@ namespace ConsoleApplication
             {
                 Console.WriteLine("Rummet: "
                                   + reservation.ReservedRoom.RoomName
-                                  + " er reserveret af " + reservation.User.FullName
+                                  + " er reserveret af " + reservation.User.FullName + " med reservationsID: " + reservation.ReservationId
                                   + ".\n Navn på børn: ");
                 foreach (var c in reservation.User.Children) 
                 {
@@ -533,7 +533,7 @@ namespace ConsoleApplication
                 Child c = birth.Child;
                 foreach (var r in c.Mother.Reservations)
                 {
-                    Console.WriteLine(" "+r.ReservedRoom.RoomName);
+                    Console.WriteLine(r.ReservedRoom.RoomName + " med reservationsID: " + r.ReservationId);
                 }
 
         }

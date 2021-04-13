@@ -8,7 +8,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="BirthClinicLibrary.Models.Person">
-    <Position X="5.5" Y="2.25" Width="1.5" />
+    <Position X="5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Person.cs</FileName>
@@ -18,15 +18,14 @@
     <Position X="7.25" Y="4" Width="1.5" />
     <InheritanceLine Type="BirthClinicLibrary.Models.Person" ManuallyRouted="true" FixedFromPoint="true">
       <Path>
-        <Point X="7" Y="3.75" />
-        <Point X="7.247" Y="3.75" />
-        <Point X="7.247" Y="3.757" />
-        <Point X="7.75" Y="3.757" />
-        <Point X="7.75" Y="4" />
+        <Point X="5.75" Y="3.247" />
+        <Point X="5.75" Y="3.757" />
+        <Point X="8" Y="3.757" />
+        <Point X="8" Y="4" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAQAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAIAAAAAAAAAAQAAAA=</HashCode>
       <FileName>Models\Person.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -39,12 +38,12 @@
   </Class>
   <Class Name="BirthClinicLibrary.Models.Secretary" Collapsed="true">
     <Position X="2.75" Y="4" Width="1.5" />
-    <InheritanceLine Type="BirthClinicLibrary.Models.Person" ManuallyRouted="true">
+    <InheritanceLine Type="BirthClinicLibrary.Models.Person" ManuallyRouted="true" FixedFromPoint="true">
       <Path>
-        <Point X="5.5" Y="3.124" />
-        <Point X="4.368" Y="3.124" />
-        <Point X="4.368" Y="4.346" />
-        <Point X="4.25" Y="4.346" />
+        <Point X="5.75" Y="3.247" />
+        <Point X="5.75" Y="3.757" />
+        <Point X="3.5" Y="3.757" />
+        <Point X="3.5" Y="4" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
