@@ -40,9 +40,6 @@ namespace ConsoleApplication
                     HandleKey(key,context);
                 }
             }
-
-
-
         }
 
         private static void HandleKey(ConsoleKeyInfo key, BirthDbContext context)
@@ -105,8 +102,7 @@ namespace ConsoleApplication
         {
             
             int id = inputID();
-
-
+            
 
             Reservation res = context.Reservation
                 .SingleOrDefault(r => r.ReservationId == id);
@@ -156,7 +152,7 @@ namespace ConsoleApplication
                 Console.WriteLine(res.ReservedRoom.RoomName);
                 foreach (var child in res.User.Children)
                 {
-                    Console.WriteLine(" Barnets navn: "+ child.FullName + " Morens navn: "+child.Mother.FullName + " Familie:");
+                    Console.WriteLine("Barnets navn: "+ child.FullName + " Morens navn: "+child.Mother.FullName + " Familie:");
                     foreach (var member in child.FamilyMembers)
                     {
                         Console.WriteLine("  "+member.Relation+": "+member.FullName);
@@ -166,21 +162,14 @@ namespace ConsoleApplication
                         .Include(b => b.Clinicians)
                         .ThenInclude(c => c.Clinician)
                         .Single(b => b.Child.PersonId == child.PersonId);
-                    Console.WriteLine(" Associeret personale:");
+                    Console.WriteLine(" Associeret personale til fødselsID "+ birth.BirthId + ":");
                     foreach (var cb in birth.Clinicians)
                     {
                         Console.WriteLine("  "+cb.Clinician.GetType().Name + ": " + cb.Clinician.FullName);
                     }
                 }
             }
-
-            /*
-            List<Birth> births =
-                context.Birth
-                    .Where(b => b.PlannedStartTime < DateTime.Now)
-                    .ToList();
-
-                births[0].*/
+            Console.WriteLine("\n\n");
         }
 
         private static void ShowAvailableRoomsAndClinicians(BirthDbContext context)
@@ -189,10 +178,8 @@ namespace ConsoleApplication
             List<Room> rooms =
                 context.Room
                     .Include(r => r.Reservations)
-                    //.Where(r=>r.Reservations.ReservationStart>DateTime.Now+TimeSpan.FromDays(5))
-                    //.Where(r=>r.ReservedRoom.GetType()==typeof(BirthRoom))
+                  
                     .ToList();
-            //print available rooms:
             Console.WriteLine("Ledige Rum:");
 
             foreach (var room in rooms)
@@ -220,7 +207,7 @@ namespace ConsoleApplication
 
 
             //Print available clinicians:
-            Console.WriteLine("\nLedige Klinikarbejdere:");
+            Console.WriteLine("\n\nLedige Klinikarbejdere:");
 
             foreach (var clinician in clinicians)
             {
@@ -237,7 +224,7 @@ namespace ConsoleApplication
                 if(!booked) Console.WriteLine(clinician.PersonId + " " + clinician.FullName + ": " + clinician.GetType().Name);
 
             }
-           
+            Console.WriteLine("\n\n");
         }
 
         private static void ShowPlannedBirths(BirthDbContext context)
@@ -251,7 +238,7 @@ namespace ConsoleApplication
                     .Include(b=>b.Clinicians)
                     .ThenInclude(cb=>cb.Clinician)
                     .ToList();
-            Console.WriteLine("Planlagte fødsler de kommende 3 dage:");
+            Console.WriteLine(" - Planlagte fødsler de kommende 3 dage:");
             foreach (var birth in plannedBirths)
             {
                 Console.WriteLine("Fødsels ID: " +birth.BirthId+"\nPlanlagt starttidspunkt: "
@@ -262,6 +249,7 @@ namespace ConsoleApplication
                     Console.WriteLine("   " + cb.Clinician.FullName + " (" + cb.Clinician.GetType().Name + ")");
                 }
             }
+            Console.WriteLine("\n\n");
         }
 
         //4.Show the maternity rooms and the four hours rest rooms in use with the mother/parents and child/children using the room.
@@ -279,7 +267,7 @@ namespace ConsoleApplication
                     .ToList();
             foreach (var reservation in maternityRoomsAndRestingRooms)
             {
-                Console.WriteLine("Rummet: "
+                Console.WriteLine(" - Rummet: "
                                   + reservation.ReservedRoom.RoomName
                                   + " er reserveret af " + reservation.User.FullName + " med reservationsID: " + reservation.ReservationId
                                   + ".\n Navn på børn: ");
@@ -288,10 +276,11 @@ namespace ConsoleApplication
                     Console.WriteLine(c.FullName + ". ");
                     foreach (var fm in c.FamilyMembers)
                     {
-                        Console.WriteLine(". \n Familiemedlem: " + fm.FullName + "Relation: " + fm.Relation);
+                        Console.WriteLine(". \n Familiemedlem: " + fm.FullName + " Relation: " + fm.Relation);
                     }
                 }
             }
+            Console.WriteLine("\n\n");
         }
 
 
@@ -308,21 +297,18 @@ namespace ConsoleApplication
                 case "birthroom":
                     rooms = context.Room
                         .Include(r => r.Reservations)
-                        //.Where(r=>r.Reservations.ReservationStart>DateTime.Now+TimeSpan.FromDays(5))
                         .Where(r => r is BirthRoom)
                         .ToList();
                     break;
                 case "maternityroom":
                     rooms = context.Room
                         .Include(r => r.Reservations)
-                        //.Where(r=>r.Reservations.ReservationStart>DateTime.Now+TimeSpan.FromDays(5))
                         .Where(r => r is MaternityRoom)
                         .ToList();
                     break;
                 case "restingroom":
                     rooms = context.Room
                         .Include(r => r.Reservations)
-                        //.Where(r=>r.Reservations.ReservationStart>DateTime.Now+TimeSpan.FromDays(5))
                         .Where(r => r is RestingRoom)
                         .ToList();
                     break;
@@ -508,7 +494,7 @@ namespace ConsoleApplication
         //b)Show the clinicians assigned the birth
         private static void ShowRoomsAndClinicianReservedForBirth(BirthDbContext context)
         {
-            Console.WriteLine("Hvilket BirthID søger du efter?");
+            Console.WriteLine(" - Hvilket BirthID søger du efter?");
             var input = Console.ReadLine();
             var inputId = int.Parse(input);
             
@@ -523,19 +509,20 @@ namespace ConsoleApplication
                     .ThenInclude(b=>b.Clinician)
                     .SingleOrDefault(b => b.BirthId == inputId);
 
-            Console.WriteLine("Fødsels ID: " + birth.BirthId + "Associeret personale: ");
+            Console.WriteLine("Fødsels ID: " + birth.BirthId + " Navn: " + birth.Child.FullName);
+            Console.WriteLine(" Associeret personale:");
                 foreach (var cb in birth.Clinicians)
                 {
                     Console.WriteLine("   " + cb.Clinician.FullName + " " + cb.Clinician.GetType().Name);
                 }
 
-            Console.WriteLine("Reserverede rum: ");
+            Console.WriteLine(" Reserverede rum: ");
                 Child c = birth.Child;
                 foreach (var r in c.Mother.Reservations)
                 {
-                    Console.WriteLine(r.ReservedRoom.RoomName + " med reservationsID: " + r.ReservationId);
+                    Console.WriteLine("   "+r.ReservedRoom.RoomName + " med reservationsID: " + r.ReservationId);
                 }
-
+                Console.WriteLine("\n\n");
         }
     }
 
